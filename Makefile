@@ -10,11 +10,14 @@ run: all
 os-image: boot/boot_sect.bin kernel.bin
 	cat $^ > os-image
 
-kernel.bin: kernel/kernel_entry.o ${OBJ}
-	ld -o $@ --nmagic -m elf_i386 -Ttext 0x1000 $^ --oformat binary --entry main
+kernel.bin: kernel_entry.o ${OBJ}
+	ld -o $@ -Ttext 0x1000 $^ --oformat binary --entry main
+
+kernel_entry.o: kernel/kernel_entry.asm
+	nasm $< -f elf64 -o $@
 
 %.o: %.c ${HEADERS}
-	gcc -ffreestanding -static -nostdlib -fno-pie -m32 -c $< -o $@
+	gcc -ffreestanding -c $< -o $@
 
 %.o : %.asm
 	nasm $< -f elf32 -o $@
