@@ -5,16 +5,16 @@ OBJ = ${C_SOURCES:.c=.o}
 all: os-image
 
 run: all
-	bochs
+	qemu-system-x86_64 os-image
 
 os-image: boot/boot_sect.bin kernel.bin
 	cat $^ > os-image
 
 kernel.bin: kernel/kernel_entry.o ${OBJ}
-	ld -o $@ -m elf_i386 -Ttext 0x1000 $^ --oformat binary
+	ld -o $@ --nmagic -m elf_i386 -Ttext 0x1000 $^ --oformat binary --entry main
 
 %.o: %.c ${HEADERS}
-	gcc -ffreestanding -fno-pie -m32 -c $< -o $@
+	gcc -ffreestanding -static -nostdlib -fno-pie -m32 -c $< -o $@
 
 %.o : %.asm
 	nasm $< -f elf32 -o $@
