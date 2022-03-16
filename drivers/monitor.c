@@ -1,8 +1,9 @@
 #include "common.h"
 #include "monitor.h"
 
-static u16int cursor_y = 0, cursor_x = 0;
-u16int *video_memory = (u16int *)0xb8000;
+u8int cursor_x = 0;
+u8int cursor_y = 0;
+u16int *video_memory = (u16int *)0xB8000;
 
 static void move_cursor()
 {
@@ -20,10 +21,11 @@ static void scroll()
     u16int blank = 0x20 | (attribute_byte << 8);
 
     if (cursor_y >= 25) {
-        for (int i = 0*80; i < 24*80; ++i) {
+        int i;
+        for (i = 0*80; i < 24*80; ++i) {
             video_memory[i] = video_memory[i+80];
         }
-        for (int i = 24*80; i < 25*80; ++i) {
+        for (i = 24*80; i < 25*80; ++i) {
             video_memory[i] = blank;
         }
         cursor_y = 24;
@@ -32,6 +34,8 @@ static void scroll()
 
 void monitor_put(char c) 
 {
+    //static u8int cursor_y = 0, cursor_x = 0;
+    //u16int *video_memory = (u16int *)0xb8000;
     u8int back_colour = 0;
     u8int fore_colour = 15;
 
@@ -78,7 +82,8 @@ void monitor_clear()
     /* Space */
     u16int blank = 32 | (attribute_byte << 8);
 
-    for (int i = 0; i < 80*25; ++i) {
+    int i;
+    for (i = 0; i < 80*25; ++i) {
         video_memory[i] = blank;
     }
 
