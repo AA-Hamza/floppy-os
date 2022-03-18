@@ -4,6 +4,7 @@ KERNEL_OFFSET equ 0x1000
 mov [BOOT_DRIVE], dl
 
 mov bp, 0x9000
+;mov bp, 0xeeee
 mov sp, bp
 
 mov bx, MSG_REAL_MODE
@@ -27,7 +28,8 @@ load_kernel:
     call print_string
     
     mov bx, KERNEL_OFFSET
-    mov dh, 12
+    mov dh, 0x35
+    ;mov dh, 20
     mov dl, [BOOT_DRIVE]
     call disk_load
 

@@ -1,4 +1,4 @@
-#include "common.h"
+#include "../kernel/common.h"
 #include "monitor.h"
 
 u8int cursor_x = 0;
@@ -8,10 +8,10 @@ u16int *video_memory = (u16int *)0xB8000;
 static void move_cursor()
 {
     u16int cursor_location = cursor_y * 80 + cursor_x;
-    outb(0x3D4, 14);
-    outb(0x3D5, cursor_location >> 8);
-    outb(0x3D4, 15);
-    outb(0x3D5, cursor_location >> 8);
+    port_byte_out(0x3D4, 14);
+    port_byte_out(0x3D5, cursor_location >> 8);
+    port_byte_out(0x3D4, 15);
+    port_byte_out(0x3D5, cursor_location >> 8);
 }
 
 static void scroll()
@@ -97,5 +97,19 @@ void monitor_write(char *str)
     int i = 0;
     while (str[i]) {
         monitor_put(str[i++]);
+    }
+}
+
+void monitor_write_num(u32int n) 
+{
+    char buff[80];
+    s32int i = 0;
+    do {
+        buff[i++] = '0' + (n % 10);
+    } while (n /= 10);
+
+    while (i >= 0) {
+        monitor_put(buff[i]);
+        i--;
     }
 }

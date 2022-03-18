@@ -4,20 +4,20 @@ OBJ = ${C_SOURCES:.c=.o}
 
 all: os-image
 
-run: all
-	qemu-system-x86_64 -fda os-image
+run: clean all 
+	qemu-system-i386 -fda os-image
 
 os-image: boot/boot_sect.bin kernel.bin
 	cat $^ > os-image
 
 kernel.bin: kernel/kernel_entry.o ${OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 --oformat binary $^ --entry main
+	i386-elf-ld -o $@ -Ttext 0x1000 --oformat binary $^ --entry _start
 
 %.o: %.c ${HEADERS}
 	i386-elf-gcc -ffreestanding -c $< -o $@
 
 %.o : %.asm
-	nasm $< -f elf -o $@
+	nasm $< -f elf -I 'kernel/' -o $@
 
 %.bin: %.asm
 	nasm $< -f bin -I 'boot/' -o $@

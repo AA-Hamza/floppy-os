@@ -10,8 +10,8 @@ typedef          short s16int;
 typedef unsigned char  u8int;
 typedef          char  s8int;
 
-void outb(u16int port, u8int value);
-u8int inb(u16int port);
-u16int inw(u16int port);
+void port_byte_out(u16int port, u8int value);
+u8int port_byte_in(u16int port);
+u16int port_word_in(u16int port);
 
 #endif
