@@ -84,7 +84,6 @@ isr_common_stub:
     popa
     add esp, 8              ; Cleans up the pushed error code and pushed ISR number
                             ; That we did early in the file
-    sti
     iret                    ; Pops CS, EIP, EFLAGS, SS, ESP
 
 
@@ -141,5 +140,4 @@ irq_common_stub:
 
     popa
     add esp, 8  ; Clean the pushed error code and pushed ISR number
-    sti
     iret
