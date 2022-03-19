@@ -5,7 +5,10 @@
 #include "../drivers/monitor_text_mode.h"
 #endif
 
+#define TIMER_FUNCTIONS 10
+
 u32int tick = 0;
+static function_ptr functions_handlers[TIMER_FUNCTIONS];
 
 static void timer_callback(registers_t regs)
 {
@@ -15,6 +18,22 @@ static void timer_callback(registers_t regs)
     monitor_write_num(tick);
     monitor_put('\n');
 #endif
+    u32int i;
+    // Go through all functions to be called when the timer ticks
+    for (i = 0; i < TIMER_FUNCTIONS; ++i) {
+        if (functions_handlers[i] != 0) {
+            functions_handlers[i](tick);
+        }
+        else {
+            break;
+        }
+    }
+}
+
+void add_func_to_timer(u8int n, function_ptr func) 
+{
+    if (func != 0)
+        functions_handlers[n] = func;
 }
 
 void init_timer(u32int frequency)

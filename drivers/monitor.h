@@ -3,6 +3,6 @@
 
 #include "../kernel/common.h"
 
-void fill_screen();
+void draw_screen();
 
 #endif
