@@ -1,8 +1,16 @@
-#include "keyboard.h"
+#ifdef TEXT_MODE
+#include "monitor_text_mode.h"
+#else
 #include "monitor.h"
+#endif
+
+
+
+#include "keyboard.h"
 
 void print_letter(u8int scancode)
 {
+#ifdef TEXT_MODE
     switch (scancode) {
         case 0x0:
             monitor_write("ERROR\n");
@@ -26,6 +34,9 @@ void print_letter(u8int scancode)
             }
             break;
     }
+#else
+    return;
+#endif
 }
 
 static void keyboard_callback(registers_t regs)

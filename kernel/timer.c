@@ -1,15 +1,20 @@
 #include "timer.h"
 #include "isr.h"
-#include "../drivers/monitor.h"
+
+#ifdef TEXT_MODE
+#include "../drivers/monitor_text_mode.h"
+#endif
 
 u32int tick = 0;
 
 static void timer_callback(registers_t regs)
 {
     tick++;
+#ifdef TEXT_MODE
     monitor_write("Tick: ");
     monitor_write_num(tick);
     monitor_put('\n');
+#endif
 }
 
 void init_timer(u32int frequency)

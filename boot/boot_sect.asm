@@ -7,10 +7,12 @@ mov [BOOT_DRIVE], dl
 mov bp, 0xeeee
 mov sp, bp
 
-;mov bx, MSG_REAL_MODE
-;call print_string
-
-;call video_mode
+%ifdef TEXT_MODE
+mov bx, MSG_REAL_MODE
+call print_string
+%else
+call video_mode
+%endif
 
 call load_kernel
 

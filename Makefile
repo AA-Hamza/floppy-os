@@ -14,13 +14,21 @@ kernel.bin: kernel/kernel_entry.o ${OBJ}
 	i386-elf-ld -o $@ -Ttext 0x1000 --oformat binary $^ --entry _start
 
 %.o: %.c ${HEADERS}
+ifdef TEXT_MODE
+	i386-elf-gcc -DTEXT_MODE -ffreestanding -c $< -o $@
+else
 	i386-elf-gcc -ffreestanding -c $< -o $@
+endif
 
 %.o : %.asm
 	nasm $< -f elf -I 'kernel/' -o $@
 
 %.bin: %.asm
+ifdef TEXT_MODE
+	nasm $< -DTEXT_MODE -f bin -I 'boot/' -o $@
+else
 	nasm $< -f bin -I 'boot/' -o $@
+endif
 
 clean:
 	rm -fr *.bin *.dis *.o os-image *.map

@@ -1,14 +1,20 @@
 #include "common.h"
 #include "isr.h"
-#include "../drivers/monitor.h"
+
+#ifdef TEXT_MODE
+#include "../drivers/monitor_text_mode.h"
+#endif
 
 isr_t interrupt_handlers[256];
 
 void isr_handler(registers_t regs)
 {
+#ifdef TEXT_MODE
     monitor_write("Recieved interrupt: ");
     monitor_write_num(regs.int_no);
     monitor_put('\n');
+#endif
+    return;
 }
 
 void irq_handler(registers_t regs)
