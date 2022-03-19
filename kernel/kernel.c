@@ -2,7 +2,7 @@
 #include "isr.h"
 #include "timer.h"
 #include "../drivers/keyboard.h"
-#include "../game/game_main.c"
+#include "../game/game.h"
 
 #ifdef TEXT_MODE
     #include "../drivers/monitor_text_mode.h"
@@ -23,11 +23,10 @@ void _start()
     monitor_clear();
     monitor_write("Installing ISRs\n");
     monitor_write("Press any key\n");
-
 #else
-    // Add draw_screen function to index 0 in timer functions
-    //add_func_to_timer(0, draw_screen);
-    init_timer(60);
-    game_main();
+    // initialize PIC frequency
+    init_timer(60);     // Basically 60 Hz
+
+    game_run();              // Run our little game
 #endif
 }
