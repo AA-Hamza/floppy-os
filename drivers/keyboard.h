@@ -8,6 +8,6 @@ void print_letter(u8int scancode);
 void init_keyboard();
 
 typedef void (*keyboard_handler_ptr)(u8int scancode);
-void add_keyboard_handler(u8int index, keyboard_handler_ptr func_ptr);
+void add_keyboard_handler(keyboard_handler_ptr func_ptr);
 
 #endif

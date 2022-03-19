@@ -30,10 +30,12 @@ static void timer_callback(registers_t regs)
     }
 }
 
-void add_func_to_timer(u8int n, function_ptr func) 
+void add_func_to_timer(function_ptr func) 
 {
-    if (func != 0)
-        functions_handlers[n] = func;
+    static u8int index = 0;
+    if (func != 0) {
+        functions_handlers[index++] = func;
+    }
 }
 
 void init_timer(u32int frequency)

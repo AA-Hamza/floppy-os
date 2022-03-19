@@ -3,8 +3,8 @@ KERNEL_OFFSET equ 0x1000
 
 mov [BOOT_DRIVE], dl
 
-;mov bp, 0x9000
-mov bp, 0xeeee
+mov bp, 0x9000
+;mov bp, 0xeeee
 mov sp, bp
 
 %ifdef TEXT_MODE

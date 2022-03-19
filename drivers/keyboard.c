@@ -58,8 +58,9 @@ void init_keyboard()
 #endif
 }
 
-void add_keyboard_handler(u8int n, keyboard_handler_ptr func_ptr)
+void add_keyboard_handler(keyboard_handler_ptr func_ptr)
 {
+    static u8int index = 0;
     if (func_ptr != 0)
-        keybard_hanlders[n] = func_ptr;
+        keybard_hanlders[index] = func_ptr;
 }
