@@ -25,10 +25,8 @@ static u32int rand()
 }
 
 // Update Tunnels positions 
-//float world_x = 0;
 static void update_tunnels()
 {
-    //world_x += WORLD_SPEED;
     u16int x, y;
     u16int i, tries = 0;
     for (i = 0; i < 6 ; ++i) {
@@ -46,10 +44,7 @@ static void update_tunnels()
             tries = 0;
             tunnels[i].x = SCREEN_WIDTH + TUNNEL_SECTION_WIDTH;
         }
-        //if (world_x > 1.0f) {
         tunnels[i].x -= WORLD_SPEED;//(s16int)world_x;
-            //world_x = 0;
-        //}
     }
 }
 static u8int collided()
@@ -101,21 +96,22 @@ void every_tick(u32int tick)
 {
     static u8int finised_rendering = 1;
     if (finised_rendering == 1 && !stop_game) {
+
         bird.y += gravity;
         if (bird.y+bird.height > SCREEN_HEIGHT) {
             bird.y = SCREEN_HEIGHT-bird.height;
         }
         gravity += GRAVITY_PULLING;
         gravity = min(gravity, GRAVITY_MAX);
-        u32int n = 1;
+
+        bird.rotation += BIRD_ROTATION;
+        bird.rotation = min(bird.rotation, BIRD_MAX_ROTATION);
 
         update_tunnels();
         if (collided()) {
             stop_game = 1;
         }
         draw_scene(&finised_rendering, &bird, tunnels);
-        bird.rotation += BIRD_ROTATION;
-        bird.rotation = min(bird.rotation, BIRD_MAX_ROTATION);
     }
     else {
         return;

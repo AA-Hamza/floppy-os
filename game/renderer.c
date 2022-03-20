@@ -3,6 +3,8 @@
 #include "game.h"
 #include "math.h"
 #include "assets/bird_img.h"
+#include "assets/foreground_img.h"
+#include "assets/tunnel_img.h"
 
 #define BACK_VIDEO_BUFFER_ADDRESS 0x1e8480 //that is 2mb mark, & it is a free memory by design
 
@@ -22,8 +24,26 @@ static void draw_background()
 
 static void draw_foreground()
 {
-    u16int x, y;
-    for (y = FOREGROUND_START; y < SCREEN_HEIGHT; ++y) {
+    static s8int foreground_x = 0;
+    foreground_x -= WORLD_SPEED;
+    if (foreground_x <= -FOREGROUND_SIZE) {
+        foreground_x = 0;
+    }
+
+    s16int x, y;
+    s16int x_index=0, y_index=0;
+    for (y = FOREGROUND_START; y < FOREGROUND_START+FOREGROUND_SIZE; ++y) {
+        for (x = foreground_x; x < SCREEN_WIDTH; ++x) {
+            if (x >= 0) {
+                back_video_buffer[y*SCREEN_WIDTH+x] = foreground_img[y_index][x_index];
+            }
+            x_index++;
+            x_index %= FOREGROUND_SIZE;
+        }
+        x_index = 0;
+        y_index++;
+    }
+    for (y = FOREGROUND_START+FOREGROUND_SIZE; y < SCREEN_HEIGHT; ++y) {
         for (x = 0; x < SCREEN_WIDTH; ++x) {
             back_video_buffer[y*SCREEN_WIDTH+x] = FOREGROUND_COLOR;
         }
@@ -36,22 +56,50 @@ static void draw_tunnels(tunnel_t *tunnels)     // Six tunnels/sections
     for (i = 0; i < 6; ++i) {
         if (tunnels[i].height > 0) {
             s16int x, y;
+            s16int index_x = 0, index_y = 0;
             // Lower Tunnel
-            for (y = SCREEN_HEIGHT-tunnels[i].height; y < FOREGROUND_START; ++y) {
-                for (x = tunnels[i].x; x < tunnels[i].x+TUNNEL_WIDTH; ++x) {
-                    if (x > 0 && x < SCREEN_WIDTH) {
-                        back_video_buffer[y*SCREEN_WIDTH+x] = TUNNEL_COLOR;
+            for (y = SCREEN_HEIGHT-tunnels[i].height ; y < SCREEN_HEIGHT-tunnels[i].height+4; ++y) {
+                for (x = tunnels[i].x-3; x < tunnels[i].x+TUNNEL_WIDTH+3; ++x) {
+                    if (x >= 0 && x < SCREEN_WIDTH) {
+                        back_video_buffer[y*SCREEN_WIDTH+x] = tunnel_top[index_y][index_x];
                     }
+                    index_x++;
                 }
+                index_x = 0;
+                index_y++;
+            }
+            index_x = 0;
+            for (y = SCREEN_HEIGHT-tunnels[i].height+4; y < FOREGROUND_START; ++y) {
+                for (x = tunnels[i].x; x < tunnels[i].x+TUNNEL_WIDTH; ++x) {
+                    if (x >= 0 && x < SCREEN_WIDTH) {
+                        back_video_buffer[y*SCREEN_WIDTH+x] = tunnel_layer[0][index_x];
+                    }
+                    index_x++;
+                }
+                index_x = 0;
             }
             
             // Upper Tunnel
-            for (y = 0; y < SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP; ++y) {
+            index_x = 0;
+            for (y = 0; y < SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP-4; ++y) {
                 for (x = tunnels[i].x; x < tunnels[i].x+TUNNEL_WIDTH; ++x) {
                     if (x > 0 && x < SCREEN_WIDTH) {
-                        back_video_buffer[y*SCREEN_WIDTH+x] = TUNNEL_COLOR;
+                        back_video_buffer[y*SCREEN_WIDTH+x] = tunnel_layer[0][index_x];
                     }
+                    index_x++;
                 }
+                index_x = 0;
+            }
+            index_y = 0;
+            for (y = SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP-4; y < SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP; ++y) {
+                for (x = tunnels[i].x-3; x < tunnels[i].x+TUNNEL_WIDTH+3; ++x) {
+                    if (x >= 0 && x < SCREEN_WIDTH) {
+                        back_video_buffer[y*SCREEN_WIDTH+x] = tunnel_top[index_y][index_x];
+                    }
+                    index_x++;
+                }
+                index_x = 0;
+                index_y++;
             }
         }
     }
