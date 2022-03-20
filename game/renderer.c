@@ -1,6 +1,8 @@
 #include "renderer.h"
 #include "logic.h"
 #include "game.h"
+#include "math.h"
+#include "assets/bird_img.h"
 
 #define BACK_VIDEO_BUFFER_ADDRESS 0x1e8480 //that is 2mb mark, & it is a free memory by design
 
@@ -57,11 +59,27 @@ static void draw_tunnels(tunnel_t *tunnels)     // Six tunnels/sections
 
 static void draw_bird(bird_t *bird)
 {
-    u16int x, y;
+    s32int x, y;
+    //s32int new_x, new_y;
+    s32int index_y = 0, index_x = 0;
+    const double bird_center_x = bird->x+bird->width/2.0f;
+    const double bird_center_y = bird->y+bird->height/2.0f;
+    const double rotation_cosine = cosine(bird->rotation);
+    const double rotation_sine = sine(bird->rotation);
     for (y = bird->y; y < bird->height+bird->y; ++y) {
         for (x = bird->x; x < bird->x+bird->width; ++x) {
-            back_video_buffer[y*SCREEN_WIDTH+x] = BIRD_COLOR;
+            if (bird_img[index_y][index_x] != 0x0) {
+                double dx = ((double) x) - bird_center_x;
+                double dy = ((double) y) - bird_center_y;
+
+                double new_x = rotation_cosine*dx - rotation_sine*dy + bird_center_x;
+                double new_y = rotation_cosine*dy + rotation_sine*dx + bird_center_y;
+                back_video_buffer[((u32int)(new_y+0.5))*SCREEN_WIDTH+((u32int)(new_x+0.5))] = bird_img[index_y][index_x];
+            }
+            index_x++;
         }
+        index_x = 0;
+        index_y++;
     }
 }
 

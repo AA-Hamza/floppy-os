@@ -84,6 +84,7 @@ void key_press(u8int scancode)
     if (!was_down && (scancode == 72 /* up key */ || scancode == 57 /* space */)) {
         if (bird.y > bird.height) {
             gravity = -GRAVITY_UPWARD;
+            bird.rotation = -BIRD_MAX_ROTATION;
         }
         else {
             bird.y = 0;
@@ -113,6 +114,8 @@ void every_tick(u32int tick)
             stop_game = 1;
         }
         draw_scene(&finised_rendering, &bird, tunnels);
+        bird.rotation += BIRD_ROTATION;
+        bird.rotation = min(bird.rotation, BIRD_MAX_ROTATION);
     }
     else {
         return;

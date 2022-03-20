@@ -14,6 +14,8 @@
 #define GRAVITY_UPWARD 3
 #define GRAVITY_MAX 2
 #define WORLD_SPEED 1
+#define BIRD_ROTATION 0.05f
+#define BIRD_MAX_ROTATION 1.0f
 
 #define TUNNEL_SECTION_WIDTH (SCREEN_WIDTH/4)
 #define TUNNEL_MIN_HEIGHT (30)
@@ -31,6 +33,7 @@ typedef struct bird_struct {
     s16int y;
     u16int width;
     u16int height;
+    double rotation;
 } bird_t;
 
 typedef struct tunnel_struct {
