@@ -5,11 +5,16 @@
 #define FOREGROUND_COLOR 0x43
 #define BIRD_COLOR 0x8B
 #define FOREGROUND_START (SCREEN_HEIGHT-25)
+#define TUNNEL_GAP 20
+#define TUNNEL_WIDTH 20
+#define TUNNEL_COLOR 0x30
+#define TUNNEL_SECTION_WIDTH (SCREEN_WIDTH/4)
 
 // We render to this buffer, then copy when we are done (screen tearing)
 static u8int *back_video_buffer = (u8int *)(BACK_VIDEO_BUFFER_ADDRESS);
 static u8int *main_video_buffer = (u8int *)(0xA0000);
 //extern bird_t bird;
+
 
 static void draw_background()
 {
@@ -29,8 +34,21 @@ static void draw_foreground()
         }
     }
 }
-static void draw_tunnels(tunnel_t *tunnels_t)
+static void draw_tunnels(tunnel_t *tunnels)     // Six tunnels/sections
 {
+    u16int i;
+    for (i = 0; i < 6; ++i) {
+        if (tunnels[i].height != 0) {
+            s16int x, y;
+            for (y = SCREEN_HEIGHT-tunnels[i].height; y < SCREEN_HEIGHT; ++y) {
+                for (x = tunnels[i].x; x < tunnels[i].x+TUNNEL_WIDTH; ++x) {
+                    if (x > 0 && x < SCREEN_WIDTH) {
+                        back_video_buffer[y*SCREEN_WIDTH+x] = TUNNEL_COLOR;
+                    }
+                }
+            }
+        }
+    }
 }
 static void draw_bird(bird_t *bird)
 {
@@ -48,11 +66,12 @@ static void swap_buffers() {
     }
 }
 
-void draw_scene(u8int *finised_rendering, bird_t *bird, tunnel_t *tunnels, u32int n)
+void draw_scene(u8int *finised_rendering, bird_t *bird, tunnel_t *tunnels)
 {
     *finised_rendering = 0;
     draw_background();
     draw_foreground();
+    draw_tunnels(tunnels);
     draw_bird(bird);
     swap_buffers();
     

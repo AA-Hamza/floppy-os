@@ -14,9 +14,7 @@ typedef struct bird_struct {
 
 typedef struct tunnel_struct {
     s16int x;
-    s16int y;
-    u16int width;
-    u16int gap;
+    u16int height;
 } tunnel_t;
 
 void game_run();
