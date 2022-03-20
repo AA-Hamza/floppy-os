@@ -4,40 +4,38 @@
 #include "renderer.h"
 #include "logic.h"
 
-#define GRAVITY_PULLING 0.4f
-#define GRAVITY_UPWARD -4
-#define GRAVITY_MAX 4
-#define WORLD_SPEED 1.0f
-#define TUNNEL_SECTION_WIDTH (SCREEN_WIDTH/4)
-#define TUNNEL_MINIMUM_HEIGHT (30)
-#define TUNNEL_MAX_HEIGHT (120)
-#define max(a,b) (a) > (b) ? (a) : (b)
-#define min(a,b) (a) > (b) ? (b) : (a)
-
-
-static float gravity = 0;     // Gravity
+// Our lovely Bird 
 extern bird_t bird;
+
+/* The obsticles are tunnels and there are 4 sectoins/tunnels on the main screen
+ * and another 2 outside the frame
+*/
 tunnel_t tunnels[6];          // 4 in the main screen
+
+// Physics
+static float gravity = 0;
 static u8int stop_game = 0;
 
-
-u32int rand()
+// Psuedo-Random function to generate the heights of the tunnels
+static u32int rand()
 {
     static u32int next = 42;
     next = next * 1103515243 + 12345;
     return (u32int)(next / 65536) % 32768;
 }
 
-static void update_tunnels()     // Six tunnels/sections
+// Update Tunnels positions 
+//float world_x = 0;
+static void update_tunnels()
 {
-    // section is 80
+    //world_x += WORLD_SPEED;
     u16int x, y;
     u16int i, tries = 0;
     for (i = 0; i < 6 ; ++i) {
         if (tunnels[i].x < -TUNNEL_SECTION_WIDTH) {        // Move it to the front by replacing tunnel[i].x with section 6
-            while (tries < 3) {     // The user gets a tunnel-free section if the rand() outputs 3 times below TUNNEL_MINIMUM_HEIGHT
+            while (tries < 3) {     // The user gets a tunnel-free section if the rand() outputs 3 times below TUNNEL_MIN_HEIGHT
                 tunnels[i].height = (u16int)(rand()%TUNNEL_MAX_HEIGHT);
-                if (tunnels[i].height >= TUNNEL_MINIMUM_HEIGHT) {
+                if (tunnels[i].height >= TUNNEL_MIN_HEIGHT) {
                     break;
                 }
                 else {
@@ -48,7 +46,10 @@ static void update_tunnels()     // Six tunnels/sections
             tries = 0;
             tunnels[i].x = SCREEN_WIDTH + TUNNEL_SECTION_WIDTH;
         }
-        tunnels[i].x -= WORLD_SPEED;
+        //if (world_x > 1.0f) {
+        tunnels[i].x -= WORLD_SPEED;//(s16int)world_x;
+            //world_x = 0;
+        //}
     }
 }
 static u8int collided()
@@ -57,7 +58,7 @@ static u8int collided()
     for (i = 0; i < 6; ++i) {
         if (tunnels[i].height == 0)
             continue;
-        if (tunnels[i].x < (SCREEN_WIDTH/2+bird.width/2) && tunnels[i].x > bird.x) {      // The bird is above that
+        if (tunnels[i].x < (bird.x+bird.width) && tunnels[i].x > bird.x) {      // The bird is above that
             // Check lower
             if ((bird.y+bird.height) >= (SCREEN_HEIGHT-tunnels[i].height)) {
                 return 1;       // Collided
@@ -82,7 +83,7 @@ void key_press(u8int scancode)
     }
     if (!was_down && (scancode == 72 /* up key */ || scancode == 57 /* space */)) {
         if (bird.y > bird.height) {
-            gravity = GRAVITY_UPWARD;
+            gravity = -GRAVITY_UPWARD;
         }
         else {
             bird.y = 0;
@@ -120,16 +121,19 @@ void every_tick(u32int tick)
 
 void init_logic()
 {
-    tunnels[0].height = 0; //SCREEN_HEIGHT/3;
+    tunnels[0].height = 0; 
     tunnels[0].x = -40;
-    tunnels[1].height = 0; //SCREEN_HEIGHT/2;
+    tunnels[1].height = 0; 
     tunnels[1].x = 40;
-    tunnels[2].height = 0; //SCREEN_HEIGHT/1;
+    tunnels[2].height = 0; 
     tunnels[2].x = 120;
-    tunnels[3].height = 0; //SCREEN_HEIGHT/1;
+    tunnels[3].height = 0; 
     tunnels[3].x = 200;
-    tunnels[4].height = 0; //SCREEN_HEIGHT/4;
+    tunnels[4].height = 0; 
     tunnels[4].x = 280;
-    tunnels[5].height = 0; //SCREEN_HEIGHT/2;
+    tunnels[5].height = 0; 
     tunnels[5].x = 360;
+
+    add_keyboard_handler(key_press);     // Key Press From logic
+    add_func_to_timer(every_tick);       // Every tick is in logic, gets called by ../kernel/timer.c
 }

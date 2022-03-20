@@ -9,11 +9,8 @@ void game_run()
 {
     bird.width = 15;
     bird.height = 15;
-    bird.x = SCREEN_WIDTH / 2 - bird.width / 2;
+    bird.x = SCREEN_WIDTH / 2 - bird.width / 2;     // Not really needed, maybe for future changes
     bird.y = SCREEN_HEIGHT / 2 - bird.height/2;
 
     init_logic();
-
-    add_keyboard_handler(key_press);     // Key Press From logic
-    add_func_to_timer(every_tick);       // Every tick is in logic, gets called by ../kernel/timer.c
 }

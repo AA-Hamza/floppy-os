@@ -32,7 +32,7 @@ endif
 
 clean:
 	rm -fr *.bin *.dis *.o os-image *.map
-	rm -fr kernel/*.o boot/*.bin drivers/*.o
+	rm -fr kernel/*.o boot/*.bin drivers/*.o -rf game/*.o
 
 kernel.dis: kernel.bin
 	ndisasm -b 32 $< > $@

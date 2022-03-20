@@ -1,17 +1,12 @@
 #include "renderer.h"
 #include "logic.h"
+#include "game.h"
 
 #define BACK_VIDEO_BUFFER_ADDRESS 0x1e8480 //that is 2mb mark, & it is a free memory by design
-#define BACKGROUND_COLOR 0x66
-#define FOREGROUND_COLOR 0x43
-#define BIRD_COLOR 0x8B
-#define TUNNEL_COLOR 0x30
-#define TUNNEL_SECTION_WIDTH (SCREEN_WIDTH/4)
 
 // We render to this buffer, then copy when we are done (screen tearing)
 static u8int *back_video_buffer = (u8int *)(BACK_VIDEO_BUFFER_ADDRESS);
 static u8int *main_video_buffer = (u8int *)(0xA0000);
-//extern bird_t bird;
 
 static void draw_background()
 {
@@ -22,6 +17,7 @@ static void draw_background()
         }
     }
 }
+
 static void draw_foreground()
 {
     u16int x, y;
@@ -31,6 +27,7 @@ static void draw_foreground()
         }
     }
 }
+
 static void draw_tunnels(tunnel_t *tunnels)     // Six tunnels/sections
 {
     u16int i;
@@ -57,6 +54,7 @@ static void draw_tunnels(tunnel_t *tunnels)     // Six tunnels/sections
         }
     }
 }
+
 static void draw_bird(bird_t *bird)
 {
     u16int x, y;
@@ -66,6 +64,7 @@ static void draw_bird(bird_t *bird)
         }
     }
 }
+
 static void swap_buffers() {
     u32int i;
     for (i = 0; i < ((u32int)SCREEN_HEIGHT)*SCREEN_WIDTH; ++i) {
