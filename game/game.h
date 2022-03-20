@@ -5,10 +5,11 @@
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
 
+#define KEY_UP_1 72     // UP arrow
+#define KEY_UP_2 57     // Spacebar
+#define KEY_CONTINUE_PLAYING 72 // R key
+
 #define BACKGROUND_COLOR 0x66
-//#define FOREGROUND_COLOR 0x43
-#define BIRD_COLOR 0x8B
-#define TUNNEL_COLOR 0x30
 
 #define GRAVITY_PULLING 0.3f
 #define GRAVITY_UPWARD 3

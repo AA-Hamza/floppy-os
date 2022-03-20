@@ -3,4 +3,5 @@
 #include "game.h"
 double sine(double angle);
 double cosine(double angle);
+u32int rand();
 #endif

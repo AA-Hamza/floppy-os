@@ -54,7 +54,7 @@ void init_keyboard()
 {
     register_interrupt_handler(IRQ1, keyboard_callback);
 #ifdef TEXT_MODE
-    add_keyboard_handler(9, print_letter_text_mode);
+    add_keyboard_handler(print_letter_text_mode);
 #endif
 }
 
@@ -62,5 +62,5 @@ void add_keyboard_handler(keyboard_handler_ptr func_ptr)
 {
     static u8int index = 0;
     if (func_ptr != 0)
-        keybard_hanlders[index] = func_ptr;
+        keybard_hanlders[index++] = func_ptr;
 }

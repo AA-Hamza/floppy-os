@@ -2,7 +2,8 @@
 #define PI 3.1415926535897932384650288
 #define TERMS 3     // No difference if you choose a higher value
 
-double power(float base, s32int exp) {
+double power(float base, s32int exp) 
+{
     if(exp < 0) {
         if(base == 0)
             return -0; // Error!!
@@ -15,7 +16,8 @@ double power(float base, s32int exp) {
     return base * power(base, exp - 1);
 }
 
-s32int fact(s32int n) {
+static s32int fact(s32int n) 
+{
     return n <= 0 ? 1 : n * fact(n-1);
 }
 
@@ -37,4 +39,12 @@ double cosine(double rad) {
         cos += power(-1, i) * power(rad, 2 * i) / fact(2 * i);
     }
     return cos;
+}
+
+// Psuedo-Random function to generate the heights of the tunnels
+u32int rand()
+{
+    static u32int next = 42;
+    next = next * 1103515243 + 12345;
+    return (u32int)(next / 65536) % 32768;
 }

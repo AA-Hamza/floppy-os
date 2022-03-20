@@ -16,14 +16,6 @@ tunnel_t tunnels[6];          // 4 in the main screen
 static float gravity = 0;
 static u8int stop_game = 0;
 
-// Psuedo-Random function to generate the heights of the tunnels
-static u32int rand()
-{
-    static u32int next = 42;
-    next = next * 1103515243 + 12345;
-    return (u32int)(next / 65536) % 32768;
-}
-
 // Update Tunnels positions 
 static void update_tunnels()
 {
@@ -47,25 +39,31 @@ static void update_tunnels()
         tunnels[i].x -= WORLD_SPEED;//(s16int)world_x;
     }
 }
+
+/* Fuction to detect if the bird has collided with any objects in the scene
+/* 
+ */
 static u8int collided()
 {
     u8int i;
     for (i = 0; i < 6; ++i) {
         if (tunnels[i].height == 0)
             continue;
-        if (tunnels[i].x < (bird.x+bird.width) && tunnels[i].x > bird.x) {      // The bird is above that
-            // Check lower
+        // if the tunnel is the one in the middle, check if the bird collided with it
+        if (tunnels[i].x < (bird.x+bird.width) && (tunnels[i].x+TUNNEL_WIDTH) > bird.x) {
+            // Check Lower Tunnel
             if ((bird.y+bird.height) >= (SCREEN_HEIGHT-tunnels[i].height)) {
                 return 1;       // Collided
             }
-            else if (bird.y < (SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP)) {
+            // Check Upper Tunnel
+            if (bird.y <= (SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP)) {
                 return 1;       // Collided
             }
-            return 0;
+            break;      // Break because other Tunnels haven't come yet
         }
-        if (bird.y+bird.height > FOREGROUND_START) {
-            return 1;
-        }
+    }
+    if (bird.y+bird.height >= FOREGROUND_START) {
+        return 1;
     }
     return 0;
 }
@@ -73,21 +71,22 @@ static u8int collided()
 void key_press(u8int scancode)
 {
     static u8int was_down = 0;
-    if (scancode == 19) {
+    if (scancode == KEY_CONTINUE_PLAYING) {
         stop_game = 0;
     }
-    if (!was_down && (scancode == 72 /* up key */ || scancode == 57 /* space */)) {
-        if (bird.y > bird.height) {
+    if (!was_down && (scancode == KEY_UP_1 /* up key */ || scancode == KEY_UP_2 /* space */)) {
+        // Check if we are on the edge of the screen
+        if (bird.y > 0) {
             gravity = -GRAVITY_UPWARD;
-            bird.rotation = -BIRD_MAX_ROTATION;
         }
         else {
-            bird.y = 0;
+            //bird.y = 0;
         }
         was_down = 1;
+        bird.rotation = -BIRD_MAX_ROTATION;
     }
-    // Key up, means that they are released
-    else if (scancode == 72+0x80 || scancode == 57+0x80) {
+    // +0x80, means that they are released
+    else if (scancode == KEY_UP_1+0x80 || scancode == KEY_UP_2+0x80) {
         was_down = 0;
     }
 }
@@ -96,18 +95,19 @@ void every_tick(u32int tick)
 {
     static u8int finised_rendering = 1;
     if (finised_rendering == 1 && !stop_game) {
-
         bird.y += gravity;
+        gravity += GRAVITY_PULLING;
+        gravity = min(gravity, GRAVITY_MAX);
+        /*
         if (bird.y+bird.height > SCREEN_HEIGHT) {
             bird.y = SCREEN_HEIGHT-bird.height;
         }
-        gravity += GRAVITY_PULLING;
-        gravity = min(gravity, GRAVITY_MAX);
-
+        */
         bird.rotation += BIRD_ROTATION;
         bird.rotation = min(bird.rotation, BIRD_MAX_ROTATION);
 
         update_tunnels();
+
         if (collided()) {
             stop_game = 1;
         }

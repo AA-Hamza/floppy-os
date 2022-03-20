@@ -6,11 +6,34 @@
 #include "assets/foreground_img.h"
 #include "assets/tunnel_img.h"
 
-#define BACK_VIDEO_BUFFER_ADDRESS 0x1e8480 //that is 2mb mark, & it is a free memory by design
+/*
+ * This is the dumbest way you can do this, but It works for now at least
+ */
+#define BACK_VIDEO_BUFFER_ADDRESS 0x1e8480  // That is 2mb mark, & it is a free memory by design
 
 // We render to this buffer, then copy when we are done (screen tearing)
 static u8int *back_video_buffer = (u8int *)(BACK_VIDEO_BUFFER_ADDRESS);
 static u8int *main_video_buffer = (u8int *)(0xA0000);
+
+static void draw_background();
+static void draw_foreground();
+static void draw_tunnels(tunnel_t *tunnels);
+static void draw_bird(bird_t *bird);
+static void swap_buffers();         // For the double buffering
+
+void draw_scene(u8int *finised_rendering, bird_t *bird, tunnel_t *tunnels)
+{
+    // This pointer is used to tell the caller function that this scene hasn't finished
+    // Rendering yet. Wait until it finishes.
+    *finised_rendering = 0;
+    draw_background();
+    draw_foreground();
+    draw_tunnels(tunnels);
+    draw_bird(bird);
+    swap_buffers();
+    
+    *finised_rendering = 1;
+}
 
 static void draw_background()
 {
@@ -136,16 +159,4 @@ static void swap_buffers() {
     for (i = 0; i < ((u32int)SCREEN_HEIGHT)*SCREEN_WIDTH; ++i) {
         main_video_buffer[i] = back_video_buffer[i];
     }
-}
-
-void draw_scene(u8int *finised_rendering, bird_t *bird, tunnel_t *tunnels)
-{
-    *finised_rendering = 0;
-    draw_background();
-    draw_foreground();
-    draw_tunnels(tunnels);
-    draw_bird(bird);
-    swap_buffers();
-    
-    *finised_rendering = 1;
 }
