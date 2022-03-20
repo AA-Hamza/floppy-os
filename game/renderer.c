@@ -1,12 +1,10 @@
 #include "renderer.h"
+#include "logic.h"
 
 #define BACK_VIDEO_BUFFER_ADDRESS 0x1e8480 //that is 2mb mark, & it is a free memory by design
 #define BACKGROUND_COLOR 0x66
 #define FOREGROUND_COLOR 0x43
 #define BIRD_COLOR 0x8B
-#define FOREGROUND_START (SCREEN_HEIGHT-25)
-#define TUNNEL_GAP 20
-#define TUNNEL_WIDTH 20
 #define TUNNEL_COLOR 0x30
 #define TUNNEL_SECTION_WIDTH (SCREEN_WIDTH/4)
 
@@ -14,7 +12,6 @@
 static u8int *back_video_buffer = (u8int *)(BACK_VIDEO_BUFFER_ADDRESS);
 static u8int *main_video_buffer = (u8int *)(0xA0000);
 //extern bird_t bird;
-
 
 static void draw_background()
 {
@@ -38,9 +35,19 @@ static void draw_tunnels(tunnel_t *tunnels)     // Six tunnels/sections
 {
     u16int i;
     for (i = 0; i < 6; ++i) {
-        if (tunnels[i].height != 0) {
+        if (tunnels[i].height > 0) {
             s16int x, y;
-            for (y = SCREEN_HEIGHT-tunnels[i].height; y < SCREEN_HEIGHT; ++y) {
+            // Lower Tunnel
+            for (y = SCREEN_HEIGHT-tunnels[i].height; y < FOREGROUND_START; ++y) {
+                for (x = tunnels[i].x; x < tunnels[i].x+TUNNEL_WIDTH; ++x) {
+                    if (x > 0 && x < SCREEN_WIDTH) {
+                        back_video_buffer[y*SCREEN_WIDTH+x] = TUNNEL_COLOR;
+                    }
+                }
+            }
+            
+            // Upper Tunnel
+            for (y = 0; y < SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP; ++y) {
                 for (x = tunnels[i].x; x < tunnels[i].x+TUNNEL_WIDTH; ++x) {
                     if (x > 0 && x < SCREEN_WIDTH) {
                         back_video_buffer[y*SCREEN_WIDTH+x] = TUNNEL_COLOR;
