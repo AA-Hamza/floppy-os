@@ -7,7 +7,7 @@
 
 #define KEY_UP_1 72     // UP arrow
 #define KEY_UP_2 57     // Spacebar
-#define KEY_CONTINUE_PLAYING 72 // R key
+#define KEY_CONTINUE_PLAYING 19 // R key
 
 #define BACKGROUND_COLOR 0x66
 
@@ -23,6 +23,16 @@
 #define TUNNEL_MAX_HEIGHT (120)
 #define TUNNEL_GAP (50)
 #define TUNNEL_WIDTH (20)
+
+#define SCORE_X 156
+#define SCORE_Y 10
+#define SCORE_COLOR 0x0F
+
+#define SHADOW_OFFSET 0x01
+#define GAME_OVER_COLOR 0x70
+//#define GAME_OVER_SHADOW_COLOR 0xb8
+#define GAME_OVER_SHADOW_COLOR 0x0F
+
 
 #define FOREGROUND_START (SCREEN_HEIGHT-25) 
 
