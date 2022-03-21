@@ -20,6 +20,12 @@ static s8int stop_game = 0;
 // Score
 static u32int score = 0;
 
+// Messages
+static const char welcome_msg[] = "Welcome to Floppy OS";
+static const char start_play[] = "Press Up arrow/Space Bar to start";
+static const char lost[] = "Game Over!";
+static const char restart_question[] = "Press R to restart";
+
 void initialize_tunnels();
 
 // Update Tunnels positions 
@@ -62,11 +68,11 @@ static u8int collided()
             above_middle_tunnel = 1;
             middle_tunnel = i;
             // Check Lower Tunnel
-            if ((bird.y+bird.height) >= (SCREEN_HEIGHT-tunnels[i].height)) {
+            if ((bird.y+bird.height) > (SCREEN_HEIGHT-tunnels[i].height)) {
                 return 1;       // Collided
             }
             // Check Upper Tunnel
-            if (bird.y <= (SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP)) {
+            if (bird.y < (SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP)) {
                 return 1;       // Collided
             }
             break;      // Break because other Tunnels haven't come yet
@@ -78,7 +84,7 @@ static u8int collided()
             }
         }
     }
-    if (bird.y+bird.height >= FOREGROUND_START) {
+    if (bird.y+bird.height > FOREGROUND_START) {
         return 1;
     }
     return 0;
@@ -92,8 +98,9 @@ void key_press(u8int scancode)
     }
     if (stop_game == 1) {
         if (scancode == KEY_CONTINUE_PLAYING) {
-            bird.rotation = 0;
-            bird.y = SCREEN_HEIGHT/2;
+            bird.y = SCREEN_HEIGHT/2;       // Place the bird in the middle of the screen
+            gravity = -GRAVITY_UPWARD;     // Make it go up
+            bird.rotation = -BIRD_MAX_ROTATION;          // The bird 
             score = 0;
             initialize_tunnels();
             stop_game = 0;
@@ -123,6 +130,7 @@ u8int finised_rendering = 1;
 void every_tick(u32int tick) 
 {
     if (finised_rendering == 1 && !stop_game) {
+
         bird.y += gravity;
         gravity += GRAVITY_PULLING;
         gravity = min(gravity, GRAVITY_MAX);
@@ -131,58 +139,40 @@ void every_tick(u32int tick)
         bird.rotation = min(bird.rotation, BIRD_MAX_ROTATION);
 
         update_tunnels();
+
         if (collided()) {
             stop_game = 1;
-            const char lost[] = "Game Over!";
-            draw_str(lost, 1+SCREEN_WIDTH/2-sizeof(lost)*8/2+SHADOW_OFFSET, SCREEN_HEIGHT/3+SHADOW_OFFSET, GAME_OVER_SHADOW_COLOR);
-            draw_str(lost, 1+SCREEN_WIDTH/2-sizeof(lost)*8/2              , SCREEN_HEIGHT/3              , GAME_OVER_COLOR);
-            const char restart_question[] = "Press R to restart";
-            draw_str(restart_question, 1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2+SHADOW_OFFSET, SCREEN_HEIGHT/2+SHADOW_OFFSET, GAME_OVER_SHADOW_COLOR);
-            draw_str(restart_question, 1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2              , SCREEN_HEIGHT/2, GAME_OVER_COLOR);
-            swap_buffers();
+            render_overlay_text(1+SCREEN_WIDTH/2-sizeof(lost)*8/2, SCREEN_HEIGHT/3, lost, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
+            render_overlay_text(1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2, SCREEN_HEIGHT/2, restart_question, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
         }
         else {
-            draw_scene(&finised_rendering, &bird, tunnels, score);
+            render_scene(&finised_rendering, &bird, tunnels, score);
         }
-
-    }
-    else {
-        return;
     }
 }
 
 void initialize_tunnels()
 {
-    tunnels[0].height = 0; 
-    tunnels[0].x = -40;
-    tunnels[1].height = 0; 
-    tunnels[1].x = 40;
-    tunnels[2].height = 0; 
-    tunnels[2].x = 120;
-    tunnels[3].height = 0; 
-    tunnels[3].x = 200;
-    tunnels[4].height = 0; 
-    tunnels[4].x = 280;
-    tunnels[5].height = 0; 
-    tunnels[5].x = 360;
+    u8int i = 0;
+    s32int x;
+    for (x = -40; x <= 360; x += 80) {
+        tunnels[i].height = 0;      // 0 height --> don't display
+        tunnels[i].x      = x;      // assigning initial x coordinates
+        i++;
+    }
 }
 
 void init_logic()
 {
-
-    const char welcome_msg[] = "Welcome to Floppy OS";
-    const char start_play[] = "Press Up arrow/Space Bar to start";
-
+    // Initial Frame
     initialize_tunnels();
-    draw_scene(&finised_rendering, &bird, tunnels, 0);
-    draw_str(welcome_msg, SCREEN_WIDTH/2+1-sizeof(welcome_msg)*8/2+SHADOW_OFFSET, SCORE_Y+8+20+SHADOW_OFFSET   , 0x0);       // For the shadow effect
-    draw_str(welcome_msg, SCREEN_WIDTH/2+1-sizeof(welcome_msg)*8/2              , SCORE_Y+8+20                 , 0x0F);
-    draw_str(start_play , SCREEN_WIDTH/2+1-sizeof(start_play)*8/2+SHADOW_OFFSET , SCORE_Y+8+20+20+SHADOW_OFFSET, 0x0);       // For the shadow effect
-    draw_str(start_play , SCREEN_WIDTH/2+1-sizeof(start_play)*8/2               , SCORE_Y+8+20+20              , 0x0F);
+    render_scene(&finised_rendering, &bird, tunnels, 0);
 
-    swap_buffers();             // To actually Reneder the text above
+    // Welcome Messages
+    render_overlay_text(SCREEN_WIDTH/2+1-sizeof(welcome_msg)*8/2, SCORE_Y+8+20, welcome_msg, 0x0F, 0x00);
+    render_overlay_text(SCREEN_WIDTH/2+1-sizeof(start_play)*8/2, SCORE_Y+8+20+20, start_play, 0x0F, 0x00);
 
-    stop_game = -1;             // Means the game haven't started yet
-    add_keyboard_handler(key_press);     // Key Press From logic
-    add_func_to_timer(every_tick);       // Every tick is in logic, gets called by ../kernel/timer.c
+    stop_game = -1;                      // Means the game haven't started yet
+    add_keyboard_handler(key_press);     // Key Press logic
+    add_func_to_timer(every_tick);       // what to do in each frame, every_tick gets called by ../kernel/timer.c
 }
