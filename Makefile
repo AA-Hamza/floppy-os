@@ -2,7 +2,7 @@ CC=i386-elf-gcc
 LD=i386-elf-ld
 ASM=nasm
 
-CCFLAGS=-ffreestanding -O2
+CCFLAGS=-ffreestanding
 C_SOURCES=$(wildcard kernel/*.c drivers/*.c game/*.c)
 HEADERS=$(wildcard kernel/*.h drivers/*.h game/*.c)
 OBJ=${C_SOURCES:.c=.o}
@@ -16,7 +16,7 @@ QEMU_FLAGS=-fda		# For floppy disk
 
 all: iso
 
-run: all 
+run: clean all 
 	$(QEMU) $(QEMU_FLAGS) $(ISO)
 
 iso: boot/$(BOOTSECT) $(KERNEL)

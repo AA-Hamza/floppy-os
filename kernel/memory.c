@@ -35,3 +35,12 @@ void *memcpy(void *dest, const void *src, u32int n)
     }
     return dest;
 }
+
+/* TODO Write a kmalloc function */
+void *kalloc(u32int size)
+{
+    static u32int *index = (u32int *)KALLOC_ADDRESS;
+    u32int *curr_postion = index;
+    index += size;
+    return (void *)curr_postion;
+}

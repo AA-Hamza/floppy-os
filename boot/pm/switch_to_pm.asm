@@ -22,7 +22,6 @@ init_pm:
     mov gs, ax
 
     mov ebp, 0x90000
-    ;mov ebp, 0xbbbbb
     mov esp, ebp
 
     call BEGIN_PM

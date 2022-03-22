@@ -69,16 +69,18 @@ static u8int collided()
             middle_tunnel = i;
             // Check Lower Tunnel
             if ((bird.y+bird.height) > (SCREEN_HEIGHT-tunnels[i].height)) {
+                above_middle_tunnel = 0;
                 return 1;       // Collided
             }
             // Check Upper Tunnel
             if (bird.y < (SCREEN_HEIGHT-tunnels[i].height-TUNNEL_GAP)) {
+                above_middle_tunnel = 0;
                 return 1;       // Collided
             }
             break;      // Break because other Tunnels haven't come yet
         }
         else {
-            if (i == middle_tunnel && above_middle_tunnel == 1) {
+            if (i == middle_tunnel && above_middle_tunnel == 1 && tunnels[i].height != 0) {
                 score++;
                 above_middle_tunnel = 0;
             }
@@ -164,6 +166,9 @@ void initialize_tunnels()
 
 void init_logic()
 {
+    // Initialize video buffer
+    init_video_buffer();
+
     // Initial Frame
     initialize_tunnels();
     render_scene(&finised_rendering, &bird, tunnels, 0);

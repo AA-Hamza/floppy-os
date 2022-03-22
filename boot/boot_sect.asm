@@ -1,10 +1,14 @@
 [org 0x7c00]
+xor ax, ax
+mov ds, ax
+mov es, ax
+mov ss, ax
+mov sp, 0x7c00
 KERNEL_OFFSET equ 0x1000
 
 mov [BOOT_DRIVE], dl
 
 mov bp, 0x9000
-;mov bp, 0xeeee
 mov sp, bp
 
 %ifdef TEXT_MODE
@@ -34,7 +38,6 @@ load_kernel:
     
     mov bx, KERNEL_OFFSET
     mov dh, 0x35
-    ;mov dh, 20
     mov dl, [BOOT_DRIVE]
     call disk_load
 
