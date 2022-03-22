@@ -16,7 +16,7 @@ QEMU_FLAGS=-fda		# For floppy disk
 
 all: iso
 
-run: clean all 
+run:
 	$(QEMU) $(QEMU_FLAGS) $(ISO)
 
 iso: boot/$(BOOTSECT) $(KERNEL)
