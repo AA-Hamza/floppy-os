@@ -1,38 +1,50 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c game/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h game/*.c)
-OBJ = ${C_SOURCES:.c=.o}
+CC=i386-elf-gcc
+LD=i386-elf-ld
+ASM=nasm
 
-all: os-image
+CCFLAGS=-ffreestanding -O2
+C_SOURCES=$(wildcard kernel/*.c drivers/*.c game/*.c)
+HEADERS=$(wildcard kernel/*.h drivers/*.h game/*.c)
+OBJ=${C_SOURCES:.c=.o}
 
-run: clean all 
-	qemu-system-i386 -fda os-image
+BOOTSECT=boot_sect.bin
+KERNEL=kernel.bin
+ISO=boot.iso
 
-os-image: boot/boot_sect.bin kernel.bin
-	cat $^ > os-image
+QEMU=qemu-system-i386
+QEMU_FLAGS=-fda		# For floppy disk
+
+all: iso
+
+run: all 
+	$(QEMU) $(QEMU_FLAGS) $(ISO)
+
+iso: boot/$(BOOTSECT) $(KERNEL)
+	cat $^ > $(ISO)
 
 kernel.bin: kernel/kernel_entry.o ${OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 --oformat binary $^ --entry _start
+	$(LD) -T linker.ld -o $(KERNEL) --oformat binary $^
 
 %.o: %.c ${HEADERS}
 ifdef TEXT_MODE
-	i386-elf-gcc -DTEXT_MODE -ffreestanding -c $< -o $@
+	$(CC) $(CCFLAGS) -DTEXT_MODE -c $< -o $@
 else
-	i386-elf-gcc -ffreestanding -c $< -o $@
+	$(CC) $(CCFLAGS) -c $< -o $@
 endif
 
 %.o : %.asm
-	nasm $< -f elf -I 'kernel/' -o $@
+	$(ASM) $< -f elf -I 'kernel/' -o $@
 
 %.bin: %.asm
 ifdef TEXT_MODE
-	nasm $< -DTEXT_MODE -f bin -I 'boot/' -o $@
+	$(ASM) $< -DTEXT_MODE -f bin -I 'boot/' -o $@
 else
-	nasm $< -f bin -I 'boot/' -o $@
+	$(ASM) $< -f bin -I 'boot/' -o $@
 endif
 
 clean:
-	rm -fr *.bin *.dis *.o os-image *.map
+	rm -fr *.bin *.dis *.o $(ISO) *.map
 	rm -fr kernel/*.o boot/*.bin drivers/*.o -rf game/*.o
 
-kernel.dis: kernel.bin
+kernel.dis: kernel
 	ndisasm -b 32 $< > $@
