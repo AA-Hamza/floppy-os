@@ -37,6 +37,7 @@ void *memcpy(void *dest, const void *src, u32int n)
 }
 
 /* TODO Write a kmalloc function */
+/* https://cataas.com/cat/cute/says/Please%20don't%20kill%20me */
 void *kalloc(u32int size)
 {
     static u32int *index = (u32int *)KALLOC_ADDRESS;
