@@ -7,7 +7,7 @@
 #include "keyboard.h"
 
 #define KEYBOARD_HANDLER_LIMIT 10
-static keyboard_handler_ptr keybard_hanlders[KEYBOARD_HANDLER_LIMIT] = {0};
+static keyboard_handler_ptr keyboard_handlers[KEYBOARD_HANDLER_LIMIT] = {0};
 
 #ifdef TEXT_MODE
 void print_letter_text_mode(u8int scancode)
@@ -44,9 +44,12 @@ static void keyboard_callback(registers_t regs)
     u8int scancode = port_byte_in(0x60);
     u8int i;
     for (i = 0; i < KEYBOARD_HANDLER_LIMIT; ++i) {
-        if (keybard_hanlders[i] == 0)
-            continue;
-        keybard_hanlders[i](scancode);
+        if (keyboard_handlers[i] != 0) {
+            keyboard_handlers[i](scancode);
+        }
+        else {
+            break;
+        }
     }
 }
 
@@ -62,5 +65,5 @@ void add_keyboard_handler(keyboard_handler_ptr func_ptr)
 {
     static u8int index = 0;
     if (func_ptr != 0)
-        keybard_hanlders[index++] = func_ptr;
+        keyboard_handlers[index++] = func_ptr;
 }
