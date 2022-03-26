@@ -1,4 +1,7 @@
 [org 0x7c00]
+jmp start_bootloader
+resb 0x50                       ; Reserve white space as some BIOSes rewrite the first bytes after 0x7c00
+start_bootloader:
 KERNEL_OFFSET equ 0x10000       ; Kernel code will be loaded at this address
 
 mov [BOOT_DRIVE], dl
