@@ -19,7 +19,7 @@ once you have `nasm` & `i386-elf-gcc` & `i386-elf-ld` you can use the command `m
 # How to run?
 You will have to have `qemu` emulator.
 ```
-qemu-system-i386 -fda boot.iso
+qemu-system-i386 -drive format=raw,file=boot.iso
 ```
 to launch the emulator. alternatively you can simply type `make run`
 

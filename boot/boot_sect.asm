@@ -28,11 +28,8 @@ jmp $
 
 [bits 16]
 load_kernel:
-    ;mov bx, MSG_LOAD_KERNEL
-    ;call print_string
-    
-    mov bx, KERNEL_OFFSET
-    mov dh, 0x20
+    mov bx, KERNEL_OFFSET/0x10
+    mov dh, 40        ;; Change that when the kernel gets bigger
     mov dl, [BOOT_DRIVE]
     call disk_load
 

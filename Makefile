@@ -12,14 +12,11 @@ KERNEL=kernel.bin
 ISO=boot.iso
 
 QEMU=qemu-system-i386
-QEMU_FLAGS=-fda		# For floppy disk
 
-all: clean iso
+all: iso
 
 run:
-	$(QEMU) $(QEMU_FLAGS) $(ISO)
-rund:
-	qemu-system-i386 -drive format=raw,file=boot.iso
+	$(QEMU) -drive format=raw,file=$(ISO)
 
 iso: boot/$(BOOTSECT) $(KERNEL)
 	cat $^ > $(ISO)

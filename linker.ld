@@ -8,13 +8,13 @@ SECTIONS
     *(.rodata)
     . = ALIGN(4K); /* Alignment for better caching */
   }
-  .data : AT(phys + (data - code))
+  .data BLOCK(4K) : AT(phys + (data - code))
   {
     data = .;
     *(.data)
     . = ALIGN(4K); /* Alignment for better caching */
   }
-  .bss : AT(phys + (bss - code))
+  .bss BLOCK(4K) : AT(phys + (bss - code))
   {
     bss = .;
     *(.bss)
