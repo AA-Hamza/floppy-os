@@ -33,8 +33,6 @@ For a simple game you will need just these 4 functions
 	- it is mainly used to draw on the screen, in my example (frequency = 60 Hz)
 3. `draw_screen(unsigned char *video_buffer)` 
     - to draw the buffer on the screen, it resides in `drivers/monitor.h`, also the video_buffer size should be `320x200`. for more [info](https://en.wikipedia.org/wiki/Mode_13h)
-4. `kalloc` 
-    - which resides in `kernel/memory.h`, if you want more memory other than the stack.
 
 and you all set, you can develop something like flappybird out of it.
 
