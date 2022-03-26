@@ -32,7 +32,7 @@ load_kernel:
     ;call print_string
     
     mov bx, KERNEL_OFFSET
-    mov dh, 0x35
+    mov dh, 0x20
     mov dl, [BOOT_DRIVE]
     call disk_load
 
