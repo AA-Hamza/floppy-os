@@ -1,18 +1,11 @@
 #include "../drivers/monitor.h"
-#include "../kernel/memory.h"
 #include "renderer.h"
 #include "logic.h"
 #include "game.h"
 #include "renderer_helper.h"
 
-// We render to this buffer, then copy when we are done (screen tearing & other image artifacts)
-
-u8int *video_buffer;
-
-void init_video_buffer()
-{
-    video_buffer = (u8int *)kalloc(SCREEN_HEIGHT*SCREEN_WIDTH);
-}
+// We render to this buffer, then copy when we are done. For screen tearing & other image artifacts
+static u8int video_buffer[SCREEN_HEIGHT*SCREEN_WIDTH];
 
 void render_to_main_screen() {
     draw_screen(video_buffer);
@@ -21,8 +14,6 @@ void render_to_main_screen() {
 // Write the current scene to the back buffer
 void render_scene(u8int *finised_rendering, bird_t *bird, tunnel_t *tunnels, u32int score)
 {
-    //u8int *video_buffer = (u8int *) kalloc(SCREEN_HEIGHT*SCREEN_WIDTH);
-
     // This pointer is used to tell the caller function that this scene hasn't finished
     // Rendering yet. Wait until it finishes.
     *finised_rendering = 0;

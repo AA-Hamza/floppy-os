@@ -44,6 +44,7 @@ this project includes 2 ways of writing to the screen
 2. text mode: for text based info, it is used here to print some interrupt info, but it will probably have some sort of shell in the feature.
  
 to use text mode you just type `make TEXT_MODE=1 iso` & `make TEXT_MODE=1 run`.
+and also note that for the time being you will also have to change line 32 in `boot/boot_sect.asm` to `24` instead of `40`, as the kernel gets smaller without the game.
 
 ## resources
 https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf

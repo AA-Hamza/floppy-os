@@ -1,5 +1,5 @@
 [org 0x7c00]
-KERNEL_OFFSET equ 0x1000
+KERNEL_OFFSET equ 0x10000       ; Kernel code will be loaded at this address
 
 mov [BOOT_DRIVE], dl
 
@@ -29,7 +29,12 @@ jmp $
 [bits 16]
 load_kernel:
     mov bx, KERNEL_OFFSET/0x10
+; TODO Automate, we shouldn't enter the number of sectors manually, sector = 512 bytes
+%ifdef TEXT_MODE
+    mov dh, 24        ;; Change that when the kernel gets bigger
+%else
     mov dh, 40        ;; Change that when the kernel gets bigger
+%endif
     mov dl, [BOOT_DRIVE]
     call disk_load
 

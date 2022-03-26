@@ -3,9 +3,12 @@ LD=i386-elf-ld
 ASM=nasm
 
 CCFLAGS=-ffreestanding
-C_SOURCES=$(wildcard kernel/*.c drivers/*.c game/*.c)
-HEADERS=$(wildcard kernel/*.h drivers/*.h game/*.c)
+C_SOURCES=$(wildcard kernel/*.c drivers/*.c)
+HEADERS=$(wildcard kernel/*.h drivers/*.h)
 OBJ=${C_SOURCES:.c=.o}
+GAME_SOURCES=$(wildcard game/*.c)
+GAME_HEADERS=$(wildcard game/*.h)
+GAME_OBJ=${GAME_SOURCES:.c=.o}
 
 BOOTSECT=boot_sect.bin
 KERNEL=kernel.bin
@@ -21,13 +24,19 @@ run:
 iso: boot/$(BOOTSECT) $(KERNEL)
 	cat $^ > $(ISO)
 
+ifdef TEXT_MODE
 kernel.bin: kernel/kernel_entry.o ${OBJ}
 	$(LD) -T linker.ld -o $(KERNEL) --oformat binary $^
+else
+kernel.bin: kernel/kernel_entry.o ${OBJ} ${GAME_OBJ}
+	$(LD) -T linker.ld -o $(KERNEL) --oformat binary $^
+endif
 
-%.o: %.c ${HEADERS}
 ifdef TEXT_MODE
+%.o: %.c ${HEADERS}
 	$(CC) $(CCFLAGS) -DTEXT_MODE -c $< -o $@
 else
+%.o: %.c ${HEADERS} ${GAME_HEADERS}
 	$(CC) $(CCFLAGS) -c $< -o $@
 endif
 

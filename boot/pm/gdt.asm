@@ -7,6 +7,7 @@ gdt_null:
     dd 0x0      ; dd is declare double word which means 4 bytes in current mode (16 bit)
     dd 0x0
 
+; Our segments span the whole 4GB addressable memory
 gdt_code:
     ; The code segment descriptor
     ; Base=0x0, limit=0xfffff

@@ -1,9 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 #include "../kernel/common.h"
+#include "../drivers/monitor.h"
 
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 200
+
+//#define SCREEN_WIDTH 320
+//#define SCREEN_HEIGHT 200
 
 #define KEY_UP_1 72     // UP arrow
 #define KEY_UP_2 57     // Spacebar

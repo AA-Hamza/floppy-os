@@ -166,9 +166,6 @@ void initialize_tunnels()
 
 void init_logic()
 {
-    // Initialize video buffer
-    init_video_buffer();
-
     // Initial Frame
     initialize_tunnels();
     render_scene(&finised_rendering, &bird, tunnels, 0);
