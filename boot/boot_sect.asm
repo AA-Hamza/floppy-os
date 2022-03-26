@@ -1,9 +1,4 @@
 [org 0x7c00]
-xor ax, ax
-mov ds, ax
-mov es, ax
-mov ss, ax
-mov sp, 0x7c00
 KERNEL_OFFSET equ 0x1000
 
 mov [BOOT_DRIVE], dl
