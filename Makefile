@@ -24,8 +24,8 @@ run:
 iso: boot/$(BOOTSECT) $(KERNEL)
 	cat $^ > $(ISO)
 
-fda: boot/$(BOOTSECT) $(KERNEL)
-	cat $^ > $(ISO)
+#fda: boot/$(BOOTSECT) $(KERNEL)
+#	cat $^ > $(ISO)
 
 ifdef TEXT_MODE
 kernel.bin: kernel/kernel_entry.o ${OBJ}

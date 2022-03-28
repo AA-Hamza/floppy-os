@@ -17,13 +17,19 @@ This a very simple x86 operating system that just have enough to play small game
 # How to compile?
 You will have to build a cross compiler, you could read more about cross compilers [here](https://wiki.osdev.org/GCC_Cross-Compiler). my exact [setup](https://github.com/cfenollosa/os-tutorial/tree/master/11-kernel-crosscompiler).
 You also will need `nasm` to compile the assembly code.
-once you have `nasm` & `i386-elf-gcc` & `i386-elf-ld` you can use the command `make iso` to generate the bootable iso.
+once you have `nasm` & `i386-elf-gcc` & `i386-elf-ld` you can use the command `make iso` to generate the raw image, or `make FLOPPY=1 iso` for a bootable floppy disk.
 
 # How to run?
-You will have to have `qemu` emulator.
+You will have to have `qemu` emulator, (this works for both the `FLOPPY` edition and the `raw` edition).
 ```
 qemu-system-i386 -drive format=raw,file=boot.iso
 ```
+
+for the floppy edition
+```
+qemu-system-i386 -fda boot.iso
+```
+
 to launch the emulator. alternatively you can simply type `make run`
 
 # How to write my own game?
@@ -46,6 +52,7 @@ this project includes 2 ways of writing to the screen
  
 to use text mode you just type `make TEXT_MODE=1 iso` & `make TEXT_MODE=1 run`.
 and also note that for the time being you will also have to change line 32 in `boot/boot_sect.asm` to `24` instead of `40`, as the kernel gets smaller without the game.
+also you can combine `TEXT_MODE` with `FLOPPY` to make a bootable floppy disk with text mode, `make TEXT_MODE=1 FLOPPY=1 iso`.
 
 ## resources
 https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
