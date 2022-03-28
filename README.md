@@ -1,5 +1,5 @@
 # Preview
-This a very simple x86 operating system that just have enough to play small games
+This a very simple x86 operating system that just have enough to play small games, you can [try using it on your browser](https://aa-hamza.github.io/floppy-os/)
 ![Floppy OS preivew gif](./preview/preview.gif)
 
 # Features
