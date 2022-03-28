@@ -2,15 +2,22 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
     <title>Floppy os</title>
   </head>
   <body>
     <h1>Floppy OS</h1>
     <h2>Try me!!</h2>
-    <div id="screen_container" style="min-width:320px; min-height:200px">
-        <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
-        <canvas style="display: none"></canvas>
+    <div class="emulator-container">
+      <div id="screen_container" >
+          <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+          <canvas></canvas>
+      </div>
     </div>
+
+    <h3>Note:</h3>
+    <p>Your browser is the one doing all the work (emulating an x86 cpu), thanks to libv86.js</p>
+    <p>so you might get some weird artificats and obviously it is faster in qemu</p>
 
     <script src="./v86/libv86.js"></script>
     <script>
@@ -20,8 +27,8 @@
     {
         var emulator = window.emulator = new V86Starter({
             wasm_path: "./v86/v86.wasm",
-            memory_size: 100 * 1000 * 1000,
-            vga_memory_size: 1000 * 1000,
+            memory_size: 12 *1000 * 1000,
+            vga_memory_size: 1000,
             screen_container: document.getElementById("screen_container"),
             bios: {
                 url: "./v86/seabios.bin",
