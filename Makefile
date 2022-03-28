@@ -2,7 +2,7 @@ CC=i386-elf-gcc
 LD=i386-elf-ld
 ASM=nasm
 
-CCFLAGS=-ffreestanding
+CCFLAGS=-ffreestanding -O2
 C_SOURCES=$(wildcard kernel/*.c drivers/*.c)
 HEADERS=$(wildcard kernel/*.h drivers/*.h)
 OBJ=${C_SOURCES:.c=.o}

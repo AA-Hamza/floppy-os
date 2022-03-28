@@ -40,7 +40,7 @@ load_kernel:
 %ifdef TEXT_MODE
     mov dh, 24        ;; Change that when the kernel gets bigger
 %else
-    mov dh, 40        ;; Change that when the kernel gets bigger
+    mov dh, 32        ;; Change that when the kernel gets bigger
 %endif
     mov dl, [BOOT_DRIVE]
     call disk_load

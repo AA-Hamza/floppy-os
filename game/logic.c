@@ -142,7 +142,8 @@ void every_tick(u32int tick)
 
         update_tunnels();
 
-        if (collided()) {
+        // We don't have to check every frame for collision, also this saves a bit of power in the browser edition
+        if (tick % 3 == 0 && collided()) {
             stop_game = 1;
             render_overlay_text(1+SCREEN_WIDTH/2-sizeof(lost)*8/2, SCREEN_HEIGHT/3, lost, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
             render_overlay_text(1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2, SCREEN_HEIGHT/2, restart_question, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
