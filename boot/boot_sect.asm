@@ -1,8 +1,5 @@
 [org 0x7c00]
-jmp start_bootloader
-resb 0x50                       ; Reserve white space as some BIOSes rewrite the first bytes after 0x7c00
-start_bootloader:
-KERNEL_OFFSET equ 0x10000       ; Kernel code will be loaded at this address
+KERNEL_OFFSET equ 0x1000
 
 mov [BOOT_DRIVE], dl
 
@@ -24,20 +21,18 @@ jmp $
 
 %include "print/print_string.asm"
 %include "video/video_mode.asm"
-%include "disk/disk_load_floppy.asm"
+%include "disk/disk_load.asm"
 %include "pm/gdt.asm"
 %include "pm/print_string_pm.asm"
 %include "pm/switch_to_pm.asm"
 
 [bits 16]
 load_kernel:
-    mov bx, KERNEL_OFFSET/0x10
-; TODO Automate, we shouldn't enter the number of sectors manually, sector = 512 bytes
-%ifdef TEXT_MODE
-    mov dh, 24        ;; Change that when the kernel gets bigger
-%else
-    mov dh, 40        ;; Change that when the kernel gets bigger
-%endif
+    ;mov bx, MSG_LOAD_KERNEL
+    ;call print_string
+    
+    mov bx, KERNEL_OFFSET
+    mov dh, 0x35
     mov dl, [BOOT_DRIVE]
     call disk_load
 

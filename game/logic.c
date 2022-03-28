@@ -148,7 +148,7 @@ void every_tick(u32int tick)
             render_overlay_text(1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2, SCREEN_HEIGHT/2, restart_question, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
         }
         else {
-            if (tick % 2 == 0)
+            //if (tick % 2 == 0)
                 render_scene(&finised_rendering, &bird, tunnels, score);
         }
     }

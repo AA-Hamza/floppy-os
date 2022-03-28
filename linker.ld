@@ -1,5 +1,5 @@
 ENTRY(_start)
-phys = 0x00010000;
+phys = 0x00001000;
 SECTIONS
 {
   .text phys : AT(phys) {
@@ -8,13 +8,13 @@ SECTIONS
     *(.rodata)
     . = ALIGN(4K); /* Alignment for better caching */
   }
-  .data BLOCK(4K) : AT(phys + (data - code))
+  .data : AT(phys + (data - code))
   {
     data = .;
     *(.data)
     . = ALIGN(4K); /* Alignment for better caching */
   }
-  .bss BLOCK(4K) : AT(phys + (bss - code))
+  .bss : AT(phys + (bss - code))
   {
     bss = .;
     *(.bss)

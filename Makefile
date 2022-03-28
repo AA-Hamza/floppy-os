@@ -3,40 +3,32 @@ LD=i386-elf-ld
 ASM=nasm
 
 CCFLAGS=-ffreestanding
-C_SOURCES=$(wildcard kernel/*.c drivers/*.c)
-HEADERS=$(wildcard kernel/*.h drivers/*.h)
+C_SOURCES=$(wildcard kernel/*.c drivers/*.c game/*.c)
+HEADERS=$(wildcard kernel/*.h drivers/*.h game/*.c)
 OBJ=${C_SOURCES:.c=.o}
-GAME_SOURCES=$(wildcard game/*.c)
-GAME_HEADERS=$(wildcard game/*.h)
-GAME_OBJ=${GAME_SOURCES:.c=.o}
 
 BOOTSECT=boot_sect.bin
 KERNEL=kernel.bin
 ISO=boot.iso
 
 QEMU=qemu-system-i386
+QEMU_FLAGS=-fda		# For floppy disk
 
 all: iso
 
 run:
-	$(QEMU) -drive format=raw,file=$(ISO)
+	$(QEMU) $(QEMU_FLAGS) $(ISO)
 
 iso: boot/$(BOOTSECT) $(KERNEL)
 	cat $^ > $(ISO)
 
-ifdef TEXT_MODE
 kernel.bin: kernel/kernel_entry.o ${OBJ}
 	$(LD) -T linker.ld -o $(KERNEL) --oformat binary $^
-else
-kernel.bin: kernel/kernel_entry.o ${OBJ} ${GAME_OBJ}
-	$(LD) -T linker.ld -o $(KERNEL) --oformat binary $^
-endif
 
-ifdef TEXT_MODE
 %.o: %.c ${HEADERS}
+ifdef TEXT_MODE
 	$(CC) $(CCFLAGS) -DTEXT_MODE -c $< -o $@
 else
-%.o: %.c ${HEADERS} ${GAME_HEADERS}
 	$(CC) $(CCFLAGS) -c $< -o $@
 endif
 

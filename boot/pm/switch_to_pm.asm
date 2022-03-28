@@ -21,7 +21,7 @@ init_pm:
     mov fs, ax
     mov gs, ax
 
-    mov ebp, 0x900000        ; Move the stack pointer to nearly the 10 mb mark
+    mov ebp, 0x90000
     mov esp, ebp
 
     call BEGIN_PM
