@@ -4,6 +4,12 @@
 disk_load:
     push dx
 
+    ; Simply divide bx by 0x10
+    ;mov ax, 4
+    ;mov cx, ax
+    shr bx, 4
+    ;clc
+
     mov [num_sectors], dh
     mov si, disk_packet
     mov word [mem_segment], bx
