@@ -112,13 +112,7 @@ void key_press(u8int scancode)
         }
     }
     if (!was_down && (scancode == KEY_UP_1 /* up key */ || scancode == KEY_UP_2 /* space */)) {
-        // Check if we are on the edge of the screen
-        if (bird.y > 0) {
-            gravity = -GRAVITY_UPWARD;
-        }
-        else {
-            //bird.y = 0;
-        }
+        gravity = -GRAVITY_UPWARD;
         was_down = 1;
         bird.rotation = -BIRD_MAX_ROTATION;
     }
@@ -134,6 +128,9 @@ void every_tick(u32int tick)
     if (finised_rendering == 1 && !stop_game) {
 
         bird.y += gravity;
+        if (bird.y < 0) {
+            bird.y = 0;
+        }
         gravity += GRAVITY_PULLING;
         gravity = min(gravity, GRAVITY_MAX);
 
@@ -143,7 +140,7 @@ void every_tick(u32int tick)
         update_tunnels();
 
         // We don't have to check every frame for collision, also this saves a bit of power in the browser edition
-        if (tick % 3 == 0 && collided()) {
+        if (collided()) {
             stop_game = 1;
             render_overlay_text(1+SCREEN_WIDTH/2-sizeof(lost)*8/2, SCREEN_HEIGHT/3, lost, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
             render_overlay_text(1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2, SCREEN_HEIGHT/2, restart_question, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
