@@ -1,0 +1,36 @@
+<HTML>
+<title>Floppy OS</title>
+<body>
+    <script src="./v86/libv86.js"></script>
+    <script>
+    "use strict";
+
+    window.onload = function()
+    {
+        var emulator = window.emulator = new V86Starter({
+            wasm_path: "./v86/v86.wasm",
+            memory_size: 10 * 1000 * 1000,
+            vga_memory_size: 1000 * 1000,
+            screen_container: document.getElementById("screen_container"),
+            bios: {
+                url: "./v86/seabios.bin",
+            },
+            vga_bios: {
+                url: "./v86/vgabios.bin",
+            },
+            fda: {
+                url: "./boot.iso",
+            },
+            autostart: true,
+        });
+    }
+    </script>
+
+    <h1>Floppy OS</h1>
+    <h2>Try me!!</h2>
+    <div id="screen_container" style="min-width:320px; min-height:200px">
+        <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+        <canvas style="display: none"></canvas>
+    </div>
+</body>
+</HTML>
