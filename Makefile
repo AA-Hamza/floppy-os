@@ -24,6 +24,9 @@ run:
 iso: boot/$(BOOTSECT) $(KERNEL)
 	cat $^ > $(ISO)
 
+fda: boot/$(BOOTSECT) $(KERNEL)
+	cat $^ > $(ISO)
+
 ifdef TEXT_MODE
 kernel.bin: kernel/kernel_entry.o ${OBJ}
 	$(LD) -T linker.ld -o $(KERNEL) --oformat binary $^
@@ -44,10 +47,18 @@ endif
 	$(ASM) $< -f elf -I 'kernel/' -o $@
 
 %.bin: %.asm
+ifdef FLOPPY
+ifdef TEXT_MODE
+	$(ASM) $< -DTEXT_MODE -DFLOPPY -f bin -I 'boot/' -o $@
+else
+	$(ASM) $< -DFLOPPY -f bin -I 'boot/' -o $@
+endif
+else
 ifdef TEXT_MODE
 	$(ASM) $< -DTEXT_MODE -f bin -I 'boot/' -o $@
 else
 	$(ASM) $< -f bin -I 'boot/' -o $@
+endif
 endif
 
 clean:
