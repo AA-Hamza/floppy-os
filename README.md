@@ -51,8 +51,10 @@ this project includes 2 ways of writing to the screen
 2. text mode: for text based info, it is used here to print some interrupt info, but it will probably have some sort of shell in the feature.
  
 to use text mode you just type `make TEXT_MODE=1 iso` & `make TEXT_MODE=1 run`.
-and also note that for the time being you will also have to change line 32 in `boot/boot_sect.asm` to `24` instead of `40`, as the kernel gets smaller without the game.
 also you can combine `TEXT_MODE` with `FLOPPY` to make a bootable floppy disk with text mode, `make TEXT_MODE=1 FLOPPY=1 iso`.
+
+# Disk Read Error!
+The "custome bootloader" is dumb, you have to specify the number of sectors to read to load the kernel. for my game it isn't an issue, but for yours it could be. so calculate the number of sectors your kernel is (kernel size / 512 bytes) and change line 32 in `boot/boot_sect.asm` accordingly.
 
 ## resources
 https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
