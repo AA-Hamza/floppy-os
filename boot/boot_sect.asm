@@ -21,7 +21,7 @@ jmp $
 
 %include "print/print_string.asm"
 %include "video/video_mode.asm"
-%include "disk/disk_load.asm"
+%include "disk/disk_load_floppy.asm"
 %include "pm/gdt.asm"
 %include "pm/print_string_pm.asm"
 %include "pm/switch_to_pm.asm"
@@ -32,7 +32,7 @@ load_kernel:
     ;call print_string
     
     mov bx, KERNEL_OFFSET
-    mov dh, 0x35
+    mov dh, 32
     mov dl, [BOOT_DRIVE]
     call disk_load
 

@@ -5,7 +5,8 @@
 #include "renderer_helper.h"
 
 // We render to this buffer, then copy when we are done. For screen tearing & other image artifacts
-static u8int video_buffer[SCREEN_HEIGHT*SCREEN_WIDTH];
+//static u8int video_buffer[SCREEN_HEIGHT*SCREEN_WIDTH];
+u8int *video_buffer = (u8int *)0xA00000;;
 
 void render_to_main_screen() {
     draw_screen(video_buffer);
