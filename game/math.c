@@ -1,6 +1,6 @@
 #include "math.h"
 #define PI 3.1415926535897932384650288
-#define TERMS 10     // No difference if you choose a higher value
+#define TERMS 3     // No difference if you choose a higher value
 
 double absd(double a) {
     if (a < 0)
