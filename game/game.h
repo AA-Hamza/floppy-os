@@ -17,6 +17,8 @@
 #define GRAVITY_UPWARD 3
 #define GRAVITY_MAX 2
 #define WORLD_SPEED 1
+// If you change any of BIRD_ROTATION or BIRD_MAX_ROTATION, You will need to calculate BIRD_MAX_ROTATION/BIRD_ROTATION
+// to draw the bird in game/renderer_helper.c 
 #define BIRD_ROTATION 0.05f
 #define BIRD_MAX_ROTATION 1.0f
 

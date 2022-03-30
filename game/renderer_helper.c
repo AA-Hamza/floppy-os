@@ -8,6 +8,8 @@
 #include "assets/tunnel_img.h"
 #include "assets/font_glyphs.h"
 
+#define TABLE_SIZE (BIRD_MAX_ROTATION/BIRD_ROTATION)
+
 void write_background(u8int *video_buffer);
 void write_foreground(u8int *video_buffer);
 void write_tunnels(u8int *video_buffer, tunnel_t *tunnels);
@@ -113,31 +115,45 @@ void write_tunnels(u8int *video_buffer, tunnel_t *tunnels)     // Six tunnels or
 
 void write_bird(u8int *video_buffer, bird_t *bird)
 {
-    s32int x, y;                          // For the buffer
-    s32int index_y = 0, index_x = 0;      // For the image
+    //static double cosine_table[2*(int)(BIRD_MAX_ROTATION/BIRD_ROTATION)+1] = {0};
+    //static double sine_table[2*(int)(BIRD_MAX_ROTATION/BIRD_ROTATION)+1] = {0};
+    // The array size must be a const expression, that means I can't do the line above :(. so it could break when someone changes BIRD_ROTATION, BIRD_MAX_ROTATION
+    static double cosine_table[41] = {0};
+    static double sine_table[41]   = {0};
     
     /* Some constants, Saving some computing power especially cosine & sine */
-    const double bird_center_x = bird->x+bird->width/2.0f;
-    const double bird_center_y = bird->y+bird->height/2.0f;
-    const double rotation_cosine = cosine(bird->rotation);
-    const double rotation_sine = sine(bird->rotation);
+    const double bird_center_x = bird->width/2.0f;
+    const double bird_center_y = bird->height/2.0f;
+
+    const int table_index = (int)( (bird->rotation+BIRD_MAX_ROTATION)/BIRD_ROTATION );
+    if (cosine_table[table_index] == 0 & sine_table[table_index] == 0) {
+        cosine_table[table_index] = cosine(bird->rotation);
+        sine_table[table_index]   = sine(bird->rotation);
+    }
+
+    const double rotation_cosine = cosine_table[table_index];       // Neglect the negative as cosine(angle) = consine(-angle)
+    const double rotation_sine = -sine_table[table_index];          // Negative because we need sine(-angle)
 
 
-    /* Writing of the bird to the back buffer */
-    for (y = bird->y; y < bird->height+bird->y; ++y) {
-        for (x = bird->x; x < bird->x+bird->width; ++x) {
-            if (bird_img[index_y][index_x] != 0x0) {        // If there is data to draw, 0x0 means it is transparent
-                double dx = ((double) x) - bird_center_x;
-                double dy = ((double) y) - bird_center_y;
-
-                double new_x = rotation_cosine*dx - rotation_sine*dy + bird_center_x;
-                double new_y = rotation_cosine*dy + rotation_sine*dx + bird_center_y;
-                video_buffer[((u32int)(new_y+0.5))*SCREEN_WIDTH+((u32int)(new_x+0.5))] = bird_img[index_y][index_x];
+    /* Instead of rotating the original image, I just rotated the final image in the other direction
+     * to make sure that every pixel has a value
+     */ 
+    s32int index_y = 0, index_x = 0;      // For the image
+    for (index_y = 0; index_y < bird->height; ++index_y) {
+        for (index_x = 0; index_x < bird->width; ++index_x) {
+            double dx = ((double) index_x) - bird_center_x;
+            double dy = ((double) index_y) - bird_center_y;
+            double new_dx = rotation_cosine*dx - rotation_sine*dy;
+            double new_dy = rotation_cosine*dy + rotation_sine*dx;
+            int new_x_location = (int)(new_dx + bird_center_x + 0.5);
+            int new_y_location = (int)(new_dy + bird_center_y + 0.5);
+            if (new_x_location >= 0 && new_x_location < bird->width 
+                    && new_y_location >= 0 && new_y_location < bird->height 
+                    && bird_img[new_y_location][new_x_location] != 0) 
+            {
+                video_buffer[(bird->y+index_y)*SCREEN_WIDTH+bird->x+index_x] = bird_img[new_y_location][new_x_location];
             }
-            index_x++;
         }
-        index_x = 0;
-        index_y++;
     }
 }
 

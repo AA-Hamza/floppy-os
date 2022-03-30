@@ -8,5 +8,6 @@
 
 double sine(double angle);
 double cosine(double angle);
+double absd(double a);
 u32int rand();
 #endif
