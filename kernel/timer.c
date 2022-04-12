@@ -1,9 +1,7 @@
 #include "timer.h"
 #include "isr.h"
 
-#ifdef TEXT_MODE
 #include "../drivers/monitor_text_mode.h"
-#endif
 
 #define TIMER_FUNCTIONS 10
 
@@ -13,11 +11,13 @@ static function_ptr functions_handlers[TIMER_FUNCTIONS];
 static void timer_callback(registers_t regs)
 {
     tick++;
-#ifdef TEXT_MODE
-    monitor_write("Tick: ");
-    monitor_write_num(tick);
-    monitor_put('\n');
-#endif
+
+    if (tick % 100) {
+        monitor_write("Tick: ");
+        monitor_write_num(tick);
+        monitor_put('\n');
+    }
+
     u32int i;
     // Go through all functions to be called when the timer ticks
     for (i = 0; i < TIMER_FUNCTIONS; ++i) {

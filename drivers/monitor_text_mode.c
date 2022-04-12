@@ -1,4 +1,3 @@
-#ifdef TEXT_MODE
 #include "../kernel/common.h"
 #include "monitor_text_mode.h"
 
@@ -114,4 +113,3 @@ void monitor_write_num(u32int n)
         i--;
     }
 }
-#endif

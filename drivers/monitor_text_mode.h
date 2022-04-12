@@ -1,5 +1,3 @@
-#ifdef TEXT_MODE
-
 #ifndef MONITOR_TEXT_MODE_H
 #define MONITOR_TEXT_MODE_H
 
@@ -16,7 +14,5 @@ void monitor_write(char *str);
 
 // Write a decimal to the screen
 void monitor_write_num(u32int n);
-
-#endif
 
 #endif

@@ -1,15 +1,10 @@
-#ifdef TEXT_MODE
 #include "monitor_text_mode.h"
-#else
-#include "monitor.h"
-#endif
 
 #include "keyboard.h"
 
 #define KEYBOARD_HANDLER_LIMIT 10
 static keyboard_handler_ptr keyboard_handlers[KEYBOARD_HANDLER_LIMIT] = {0};
 
-#ifdef TEXT_MODE
 void print_letter_text_mode(u8int scancode)
 {
     switch (scancode) {
@@ -37,7 +32,6 @@ void print_letter_text_mode(u8int scancode)
     }
     return;
 }
-#endif
 
 static void keyboard_callback(registers_t regs)
 {
@@ -56,9 +50,7 @@ static void keyboard_callback(registers_t regs)
 void init_keyboard() 
 {
     register_interrupt_handler(IRQ1, keyboard_callback);
-#ifdef TEXT_MODE
     add_keyboard_handler(print_letter_text_mode);
-#endif
 }
 
 void add_keyboard_handler(keyboard_handler_ptr func_ptr)
