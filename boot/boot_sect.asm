@@ -13,9 +13,9 @@ mov sp, bp
 mov bx, MSG_REAL_MODE
 call print_string
 
-call video_mode
-
 call load_kernel
+
+call video_mode
 call switch_to_pm
 jmp $
 
