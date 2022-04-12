@@ -1,4 +1,3 @@
-#ifndef TEXT_MODE
 #include "../kernel/common.h"
 #include "../kernel/timer.h"
 #include "../kernel/memory.h"
@@ -26,4 +25,3 @@ void draw_pixel(u32int x, u32int y, u8int color)
     video_memory[y*SCREEN_WIDTH+x] = color;
 }
 
-#endif
