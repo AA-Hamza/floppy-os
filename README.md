@@ -7,7 +7,11 @@ This a very simple x86 operating system that just have enough to play small game
 
 # Features
  - [x] Custom Bootloader 
- - [x] x86 compatible, at least works on QEMU
+ - [x] x86 at least works on QEMU
+ - [x] Keyboard Driver PS/2
+ - [x] PIT
+ - [x] 320x200 Video mode [Mode 13h](https://en.wikipedia.org/wiki/VGA_text_mode)
+ - [x] VGA text mode (`TEXT_MODE`)
  - [x] Modifiable (meaning you can replace flappybird game easily), the game isn't hard coded like other alternatives.
  - [x] Fits in a Floppy Disk, who could have guessed?
  - [ ] Memory management, TODO
