@@ -1,18 +1,12 @@
 # Preview
-
-This a very simple x86 operating system that just have enough to play small games, you can [try using it on your browser](https://aa-hamza.github.io/floppy-os/)
-
-
-![Floppy OS preivew gif](./preview/preview.gif)
+Text mode branch
 
 # Features
  - [x] Custom Bootloader 
  - [x] x86 at least works on QEMU
  - [x] Keyboard Driver PS/2
  - [x] PIT
- - [x] 320x200 Video mode [Mode 13h](https://en.wikipedia.org/wiki/VGA_text_mode)
  - [x] VGA text mode (`TEXT_MODE`)
- - [x] Modifiable (meaning you can replace flappybird game easily), the game isn't hard coded like other alternatives.
  - [x] Fits in a Floppy Disk, who could have guessed?
  - [ ] Memory management, TODO
  - [ ] Works on real hardware, TODO
@@ -36,26 +30,18 @@ qemu-system-i386 -fda boot.iso
 
 to launch the emulator. alternatively you can simply type `make run`
 
-# How to write my own game?
+# How to write my own programs?
 For a simple game you will need just these 4 functions
 1. `add_keyboard_handler(void (*function_ptr)(unsigned int scancode)` 
     - Takes a function pointer, it passes the key scancode to function.
 2.  `add_func_to_timer(void  (*fucntion_ptr)(unsigned int tick))`
 	- You can think of this function as the scheduler, `function_ptr` gets called every time the PIC ticks,
 	- You use `init_timer(unsigned int frequency)` to specify the frequency.
-	- it is mainly used to draw on the screen, in my example (frequency = 60 Hz)
-3. `draw_screen(unsigned char *video_buffer)` 
-    - to draw the buffer on the screen, it resides in `drivers/monitor.h`, also the video_buffer size should be `320x200`. for more [info](https://en.wikipedia.org/wiki/Mode_13h)
-
-and you all set, you can develop something like flappybird out of it.
 
 # Text mode
 this project includes 2 ways of writing to the screen
 1. video mode: is used to write colors and pixels to the screen, like in the game.
 2. text mode: for text based info, it is used here to print some interrupt info, but it will probably have some sort of shell in the feature.
- 
-to use text mode you just type `make TEXT_MODE=1 iso` & `make TEXT_MODE=1 run`.
-also you can combine `TEXT_MODE` with `FLOPPY` to make a bootable floppy disk with text mode, `make TEXT_MODE=1 FLOPPY=1 iso`.
 
 # Disk Read Error!
 The "custome bootloader" is dumb, you have to specify the number of sectors to read to load the kernel. for my game it isn't an issue, but for yours it could be. so calculate the number of sectors your kernel is (kernel size / 512 bytes) and change line 32 in `boot/boot_sect.asm` accordingly.
