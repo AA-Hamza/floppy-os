@@ -11,7 +11,7 @@ static void move_cursor()
     port_byte_out(0x3D4, 14);
     port_byte_out(0x3D5, cursor_location >> 8);
     port_byte_out(0x3D4, 15);
-    port_byte_out(0x3D5, cursor_location >> 8);
+    port_byte_out(0x3D5, cursor_location);
 }
 
 static void scroll()
