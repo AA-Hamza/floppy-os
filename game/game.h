@@ -1,17 +1,14 @@
 #ifndef GAME_H
 #define GAME_H
-#include "../kernel/common.h"
+#include "../kernel/kernel.h"
 #include "../drivers/monitor.h"
-
-
-//#define SCREEN_WIDTH 320
-//#define SCREEN_HEIGHT 200
 
 #define KEY_UP_1 72     // UP arrow
 #define KEY_UP_2 57     // Spacebar
 #define KEY_CONTINUE_PLAYING 19 // R key
 
-#define BACKGROUND_COLOR 0x66
+#define BACKGROUND_COLOR 0b01011011
+#define FOREGROUND_COLOR 0b11011111
 
 #define GRAVITY_PULLING 0.3f
 #define GRAVITY_UPWARD 3
@@ -30,11 +27,11 @@
 
 #define SCORE_X 156
 #define SCORE_Y 10
-#define SCORE_COLOR 0x0F
+#define SCORE_COLOR 0xFF
 
 #define SHADOW_OFFSET 0x01
-#define GAME_OVER_COLOR 0x70
-#define GAME_OVER_SHADOW_COLOR 0x0F
+#define GAME_OVER_COLOR 0xFF
+#define GAME_OVER_SHADOW_COLOR 0
 
 
 #define FOREGROUND_START (SCREEN_HEIGHT-25) 

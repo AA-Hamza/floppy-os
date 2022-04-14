@@ -2,9 +2,9 @@ CC=i386-elf-gcc
 LD=i386-elf-ld
 ASM=nasm
 
-CCFLAGS=-ffreestanding -O3
-C_SOURCES=$(wildcard kernel/*.c drivers/*.c)
-HEADERS=$(wildcard kernel/*.h drivers/*.h)
+CCFLAGS=-ffreestanding #-O3
+C_SOURCES=$(wildcard kernel/*.c drivers/*.c utils/*.c)
+HEADERS=$(wildcard kernel/*.h drivers/*.h utils/*.h)
 OBJ=${C_SOURCES:.c=.o}
 GAME_SOURCES=$(wildcard game/*.c)
 GAME_HEADERS=$(wildcard game/*.h)

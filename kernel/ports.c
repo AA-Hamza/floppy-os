@@ -1,4 +1,4 @@
-#include "common.h"
+#include "ports.h"
 
 // Write a byte out to a specified port
 void port_byte_out(u16int port, u8int value)

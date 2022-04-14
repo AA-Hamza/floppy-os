@@ -1,9 +1,9 @@
 #ifndef TUNNEL_IMG_H
 #define  TUNNEL_IMG_H
 
-#define TUNNEL_DARK 0x2F
-#define TUNNEL_LIGHT 0x47
-#define TUNNEL_OUTER 0x12
+#define TUNNEL_DARK 0b01010000
+#define TUNNEL_LIGHT 0b11011110
+#define TUNNEL_OUTER 0
 #define TUNNEL_TOP_LAYER_SIZE 4
 
 unsigned char tunnel_layer[1][20] = {

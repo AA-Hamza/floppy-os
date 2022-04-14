@@ -1,7 +1,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include "../kernel/common.h"
+#include "../kernel/kernel.h"
 #include "../kernel/isr.h"
 
 void print_letter(u8int scancode);

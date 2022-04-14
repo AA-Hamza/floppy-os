@@ -2,7 +2,7 @@
 #define PI 3.1415926535897932384650288
 #define TERMS 3     // No difference if you choose a higher value
 
-double absd(double a) {
+inline double absd(double a) {
     if (a < 0)
         return -a;
     return a;

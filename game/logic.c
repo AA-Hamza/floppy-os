@@ -1,9 +1,8 @@
 #include "../drivers/keyboard.h"
 #include "../kernel/timer.h"
 #include "renderer.h"
-#include "game.h"
+#include "../utils/math.h"
 #include "logic.h"
-#include "math.h"
 
 // Our lovely Bird 
 extern bird_t bird;
@@ -12,6 +11,9 @@ extern bird_t bird;
  * and another 2 outside the frame
 */
 tunnel_t tunnels[6];          // 4 in the main screen
+
+// Rendering Lock
+u8int finished_rendering = 1;
 
 // Physics
 static float gravity = 0;
@@ -122,11 +124,10 @@ void key_press(u8int scancode)
     }
 }
 
-u8int finised_rendering = 1;
 void every_tick(u32int tick) 
 {
-    if (finised_rendering == 1 && !stop_game) {
-
+    static u32int old_tick = 0;
+    if (finished_rendering == 1 && !stop_game) {
         bird.y += gravity;
         if (bird.y < 0) {
             bird.y = 0;
@@ -146,8 +147,20 @@ void every_tick(u32int tick)
             render_overlay_text(1+SCREEN_WIDTH/2-sizeof(restart_question)*8/2, SCREEN_HEIGHT/2, restart_question, GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
         }
         else {
-            render_scene(&finised_rendering, &bird, tunnels, score);
+            render_scene(&finished_rendering, &bird, tunnels, score);
         }
+
+        // Render number of ticks taken by the frame
+        //char buff[80];
+        //itoa(tick-old_tick, buff, 10);
+        //render_overlay_text(10, 10, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
+        //u32int i;
+        //for (i = 0; i < 1000000; ++i) {
+        //    i++;
+        //}
+        //itoa(i, buff, 10);
+        //render_overlay_text(10, 0, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
+        //old_tick = tick;
     }
 }
 
@@ -166,7 +179,7 @@ void init_logic()
 {
     // Initial Frame
     initialize_tunnels();
-    render_scene(&finised_rendering, &bird, tunnels, 0);
+    render_scene(&finished_rendering, &bird, tunnels, 0);
 
     // Welcome Messages
     render_overlay_text(SCREEN_WIDTH/2+1-sizeof(welcome_msg)*8/2, SCORE_Y+8+20, welcome_msg, 0x0F, 0x00);

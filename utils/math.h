@@ -1,7 +1,7 @@
 #ifndef GAME_MATH_H
 #define GAME_MATH_H
 
-#include "game.h"
+#include "../kernel/kernel.h"
 
 #define max(a,b) (a) > (b) ? (a) : (b)
 #define min(a,b) (a) > (b) ? (b) : (a)

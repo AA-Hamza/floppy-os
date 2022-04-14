@@ -1,7 +1,7 @@
 #ifndef DESCRITPOR_TABLE_H
 #define DESCRITPOR_TABLE_H
 
-#include "common.h"
+#include "kernel.h"
 
 void init_descriptor_table();
 

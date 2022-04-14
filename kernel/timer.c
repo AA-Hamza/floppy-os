@@ -1,5 +1,6 @@
 #include "timer.h"
 #include "isr.h"
+#include "ports.h"
 
 #define TIMER_FUNCTIONS 10
 
@@ -9,9 +10,12 @@ static function_ptr functions_handlers[TIMER_FUNCTIONS];
 static void timer_callback(registers_t regs)
 {
     tick++;
-
     u32int i;
-    // Go through all functions to be called when the timer ticks
+    /*
+     * Notice that this is blocking
+     * meaning that if it takes more than one tick for these functions, timer_callback won't be called
+     * and your tick won't be incremented.
+     */
     for (i = 0; i < TIMER_FUNCTIONS; ++i) {
         if (functions_handlers[i] != 0) {
             functions_handlers[i](tick);

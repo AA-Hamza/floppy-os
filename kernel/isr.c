@@ -1,5 +1,5 @@
-#include "common.h"
 #include "isr.h"
+#include "ports.h"
 
 isr_t interrupt_handlers[256];
 

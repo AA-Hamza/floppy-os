@@ -1,5 +1,5 @@
 #include "monitor.h"
-
+#include "../kernel/ports.h"
 #include "keyboard.h"
 
 #define KEYBOARD_HANDLER_LIMIT 10

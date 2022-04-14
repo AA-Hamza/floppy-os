@@ -1,12 +1,12 @@
 #include "renderer.h"
 #include "renderer_helper.h"
-//#include "logic.h"
 #include "game.h"
-#include "math.h"
+#include "../utils/math.h"
 #include "assets/bird_img.h"
 #include "assets/foreground_img.h"
 #include "assets/tunnel_img.h"
 #include "assets/font_glyphs.h"
+#include "../utils/string.h"
 
 #define TABLE_SIZE (BIRD_MAX_ROTATION/BIRD_ROTATION)
 
@@ -190,18 +190,7 @@ void write_str(u8int *video_buffer, const char *str, u32int x, u32int y, u8int c
 
 void write_score(u8int *video_buffer, u32int score) {
     char buff[80];
-    u32int i = 0;
-    do {
-        buff[i++] = '0' + score % 10 ;
-    } while (score /= 10);
-    buff[i] = 0;
-    // Swap all before the null
-    u32int j;
-    for (j = 0; j < i-1; ++j) {
-        char temp = buff[j];
-        buff[j] = buff[i-1-j];
-        buff[i-1-j] = temp;
-    }
+    itoa(score, buff, 10);
     // For the Shadow effect
     write_str(video_buffer, buff, SCORE_X+1, SCORE_Y+1, 0x0);
     write_str(video_buffer, buff, SCORE_X, SCORE_Y, SCORE_COLOR);
