@@ -182,8 +182,8 @@ void init_logic()
     render_scene(&finished_rendering, &bird, tunnels, 0);
 
     // Welcome Messages
-    render_overlay_text(SCREEN_WIDTH/2+1-sizeof(welcome_msg)*8/2, SCORE_Y+8+20, welcome_msg, 0x0F, 0x00);
-    render_overlay_text(SCREEN_WIDTH/2+1-sizeof(start_play)*8/2, SCORE_Y+8+20+20, start_play, 0x0F, 0x00);
+    render_overlay_text(SCREEN_WIDTH/2+1-sizeof(welcome_msg)*8/2, SCORE_Y+8+20, welcome_msg, 0xFF, 0x00);
+    render_overlay_text(SCREEN_WIDTH/2+1-sizeof(start_play)*8/2, SCORE_Y+8+20+20, start_play, 0xFF, 0x00);
 
     stop_game = -1;                      // Means the game haven't started yet
     add_keyboard_handler(key_press);     // Key Press logic
