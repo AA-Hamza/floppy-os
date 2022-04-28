@@ -10,4 +10,6 @@ typedef          short s16int;
 typedef unsigned char  u8int;
 typedef          char  s8int;
 
+void KPANIC(char *str);
+
 #endif

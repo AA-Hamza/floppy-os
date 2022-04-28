@@ -7,6 +7,7 @@
 
 void draw_screen(u8int *buffer);
 void draw_pixel(u32int x, u32int y, u8int color);
+void draw_PANIC(char *text);
 void init_monitor();
 
 #endif
