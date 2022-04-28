@@ -1,11 +1,17 @@
 #include "descriptor_tables.h"
 #include "isr.h"
 #include "timer.h"
+#include "memory.h"
 #include "../drivers/keyboard.h"
 #include "../game/game.h"
 
 #include "../drivers/monitor.h"
 
+void KPANIC(char *str)
+{
+    draw_PANIC(str);
+    while (1) {}
+}
 
 void _start()
 {
