@@ -49,6 +49,6 @@ typedef struct tunnel_struct {
     u16int height;
 } tunnel_t;
 
-void game_run();
+void game_run(int fps);
 
 #endif

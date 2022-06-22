@@ -2,7 +2,9 @@
 #include "../kernel/timer.h"
 #include "renderer.h"
 #include "../utils/math.h"
+#include "../utils/string.h"
 #include "logic.h"
+
 
 // Our lovely Bird 
 extern bird_t bird;
@@ -124,7 +126,7 @@ void key_press(u8int scancode)
     }
 }
 
-void every_tick(u32int tick) 
+void handle_frame(u32int tick) 
 {
     static u32int old_tick = 0;
     if (finished_rendering == 1 && !stop_game) {
@@ -151,16 +153,10 @@ void every_tick(u32int tick)
         }
 
         // Render number of ticks taken by the frame
-        //char buff[80];
-        //itoa(tick-old_tick, buff, 10);
-        //render_overlay_text(10, 10, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
-        //u32int i;
-        //for (i = 0; i < 1000000; ++i) {
-        //    i++;
-        //}
-        //itoa(i, buff, 10);
-        //render_overlay_text(10, 0, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
-        //old_tick = tick;
+        char buff[80];
+        itoa(tick-old_tick, buff, 10);
+        render_overlay_text(10, 0, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
+        old_tick = tick;
     }
 }
 
@@ -175,7 +171,7 @@ void initialize_tunnels()
     }
 }
 
-void init_logic()
+void init_logic(const int fps)
 {
     // Initial Frame
     initialize_tunnels();
@@ -187,5 +183,14 @@ void init_logic()
 
     stop_game = -1;                      // Means the game haven't started yet
     add_keyboard_handler(key_press);     // Key Press logic
-    add_func_to_timer(every_tick);       // what to do in each frame, every_tick gets called by ../kernel/timer.c
+
+    // 
+    u32int last_frame = 0;
+    while (1) {
+        const u32int now = get_timer();
+        if ((now - last_frame) >= (TIMER_TICKS / fps)) {
+            last_frame = now;
+            handle_frame(now);
+        }
+    }
 }

@@ -2,37 +2,20 @@
 #include "isr.h"
 #include "ports.h"
 
-#define TIMER_FUNCTIONS 10
 
 u32int tick = 0;
-static function_ptr functions_handlers[TIMER_FUNCTIONS];
+
+u32int get_timer(void) 
+{
+    return tick;
+}
+
 
 static void timer_callback(registers_t regs)
 {
     tick++;
-    u32int i;
-    /*
-     * Notice that this is blocking
-     * meaning that if it takes more than one tick for these functions, timer_callback won't be called
-     * and your tick won't be incremented.
-     */
-    for (i = 0; i < TIMER_FUNCTIONS; ++i) {
-        if (functions_handlers[i] != 0) {
-            functions_handlers[i](tick);
-        }
-        else {
-            break;
-        }
-    }
 }
 
-void add_func_to_timer(function_ptr func) 
-{
-    static u8int index = 0;
-    if (func != 0) {
-        functions_handlers[index++] = func;
-    }
-}
 
 void init_timer(u32int frequency)
 {

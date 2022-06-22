@@ -8,5 +8,5 @@
 // The PIC calls this function
 //void every_tick(u32int tick);
 
-void init_logic();
+void init_logic(int fps);
 #endif
