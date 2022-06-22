@@ -2,7 +2,7 @@
 
 This a very simple x86 operating system that just have enough to play small games, you can [try using it on your browser](https://aa-hamza.github.io/floppy-os/)
 
-![Floppy OS preivew gif](./preview/preview.gif)
+![Floppy OS preivew](./preview/preview.mp4)
 
 # Features
  - [x] Custom Bootloader 
@@ -38,10 +38,8 @@ to launch the emulator. alternatively you can simply type `make run`
 For a simple game you will need just these 4 functions
 1. `add_keyboard_handler(void (*function_ptr)(unsigned int scancode)` 
     - Takes a function pointer, it passes the key scancode to function.
-2.  `add_func_to_timer(void  (*fucntion_ptr)(unsigned int tick))`
-	- You can think of this function as the scheduler, `function_ptr` gets called every time the PIC ticks,
-	- You use `init_timer(unsigned int frequency)` to specify the frequency.
-	- it is mainly used to draw on the screen, in my example (frequency = 60 Hz)
+2.  `get_timer(void)`
+    - Gets you the current tick
 3. `draw_screen(unsigned char *video_buffer)` 
     - to draw the buffer on the screen, it resides in `drivers/monitor.h`, also the video_buffer size should be `320x200`. for more [info](https://en.wikipedia.org/wiki/Mode_13h)
 

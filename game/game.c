@@ -5,7 +5,7 @@
 
 bird_t bird;
 
-void game_run(const int fps)
+void game_run(void)
 {
     bird.width = 16;
     bird.height = 16;
@@ -13,5 +13,5 @@ void game_run(const int fps)
     bird.y = SCREEN_HEIGHT / 2 - bird.height/2;
     bird.rotation = 0.0f;
 
-    init_logic(fps);
+    init_logic(60);
 }

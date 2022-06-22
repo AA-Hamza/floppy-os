@@ -128,7 +128,7 @@ void key_press(u8int scancode)
 
 void handle_frame(u32int tick) 
 {
-    static u32int old_tick = 0;
+    //static u32int old_tick = 0;
     if (finished_rendering == 1 && !stop_game) {
         bird.y += gravity;
         if (bird.y < 0) {
@@ -153,10 +153,10 @@ void handle_frame(u32int tick)
         }
 
         // Render number of ticks taken by the frame
-        char buff[80];
-        itoa(tick-old_tick, buff, 10);
-        render_overlay_text(10, 0, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
-        old_tick = tick;
+        //char buff[80];
+        //itoa(tick-old_tick, buff, 10);
+        //render_overlay_text(10, 0, buff,GAME_OVER_COLOR, GAME_OVER_SHADOW_COLOR);
+        //old_tick = tick;
     }
 }
 
