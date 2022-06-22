@@ -2,7 +2,7 @@
 
 This a very simple x86 operating system that just have enough to play small games, you can [try using it on your browser](https://aa-hamza.github.io/floppy-os/)
 
-![Floppy OS preivew](./preview/preview.mp4)
+<video src="https://user-images.githubusercontent.com/33000142/175102331-f10be432-9b14-4283-8544-3cfc6e3b0f57.mp4"></video>
 
 # Features
  - [x] Custom Bootloader 
